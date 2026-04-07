@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>SR-A // LAST HOPE</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at 20% 30%, #0a0c12, #030507);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Share Tech Mono', 'Fira Code', 'Courier New', monospace;
+            padding: 1.5rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Эффект зернистости */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-radial-gradient(circle at 20% 30%, rgba(0, 255, 170, 0.02) 0px, rgba(0, 0, 0, 0.2) 2px);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Сетка на фоне */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 170, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 170, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* ОСНОВНОЙ КОНТЕЙНЕР – ЭКРАН ТЕРМИНАЛА */
+        .terminal {
+            position: relative;
+            z-index: 10;
+            max-width: 1100px;
+            width: 100%;
+            background: rgba(8, 12, 18, 0.85);
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(0, 255, 170, 0.4);
+            border-radius: 28px;
+            box-shadow: 0 0 30px rgba(0, 255, 170, 0.15), inset 0 0 15px rgba(0, 255, 170, 0.05);
+            padding: 1.8rem 2rem 2rem 2rem;
+            transition: all 0.3s ease;
+        }
+
+        /* Уголки */
+        .terminal::before,
+        .terminal::after {
+            content: "";
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            border-color: #0fa;
+            border-style: solid;
+            filter: drop-shadow(0 0 4px #0fa);
+        }
+
+        .terminal::before {
+            top: 12px;
+            left: 12px;
+            border-top-width: 2px;
+            border-left-width: 2px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .terminal::after {
+            bottom: 12px;
+            right: 12px;
+            border-bottom-width: 2px;
+            border-right-width: 2px;
+            border-left: none;
+            border-top: none;
+        }
+
+        /* GRID основной структуры */
+        .protocol-grid {
+            display: grid;
+            grid-template-columns: 1fr 0.9fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            align-items: center;
+        }
+
+        /* ЛЕВАЯ ПАНЕЛЬ: USER INFO */
+        .user-panel {
+            background: rgba(0, 20, 15, 0.4);
+            border-left: 3px solid #0fa;
+            padding: 1rem 0 1rem 1.5rem;
+            transition: all 0.2s;
+        }
+
+        .user-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #6fcf97;
+            margin-bottom: 0.5rem;
+        }
+
+        .user-name {
+            font-size: 2.2rem;
+            font-weight: 500;
+            color: #ccffdd;
+            text-shadow: 0 0 8px #0fa;
+            word-break: break-word;
+        }
+
+        .user-name span {
+            color: #0fa;
+            font-weight: bold;
+        }
+
+        /* ПРАВАЯ ПАНЕЛЬ: LAST HOPE */
+        .metric-panel {
+            background: rgba(0, 20, 15, 0.3);
+            padding: 1rem 1.5rem;
+            border-right: 3px solid #0fa;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 180px;
+        }
+
+        .last-hope-text {
+            font-size: 3.2rem;
+            font-weight: 700;
+            font-family: 'CourierNewPSMT', 'Courier New', 'Courier', monospace;
+            color: #ff3366;
+            text-shadow: 0 0 15px #ff3366, 0 0 30px #ff1144, 0 0 45px #ff3366;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            animation: pulseRedGlow 1.8s infinite alternate;
+            word-break: break-word;
+        }
+
+        @keyframes pulseRedGlow {
+            0% {
+                text-shadow: 0 0 5px #ff3366, 0 0 10px #ff1144;
+                opacity: 0.9;
+            }
+            100% {
+                text-shadow: 0 0 20px #ff6699, 0 0 35px #ff3366, 0 0 50px #ff1144;
+                opacity: 1;
+            }
+        }
+
+        /* СТРОКА ПРОТОКОЛА – динамический блок */
+        .protocol-status {
+            margin: 2rem 0 1.8rem;
+            background: #030b0a70;
+            padding: 1rem 1.5rem;
+            border: 1px dashed #0fa;
+            border-radius: 14px;
+            backdrop-filter: blur(3px);
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* Верхняя строка с кнопкой сканирования */
+        .scan-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* КНОПКА СКАНИРОВАНИЯ */
+        .scan-button {
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Share Tech Mono', 'Fira Code', monospace;
+            background: rgba(10, 40, 30, 0.7);
+            backdrop-filter: blur(4px);
+            padding: 8px 24px;
+            border-radius: 60px;
+            border: 1px solid #0fa;
+            color: #0fa;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 0 8px rgba(0, 255, 170, 0.4);
+            white-space: nowrap;
+        }
+
+        .scan-button:hover:not(:disabled) {
+            background: #0fa22a30;
+            border-color: #ff66aa;
+            color: #ff88cc;
+            box-shadow: 0 0 16px #0fa, 0 0 10px #ff66aa;
+            text-shadow: 0 0 5px #0fa;
+            transform: scale(1.02);
+        }
+
+        .scan-button:active:not(:disabled) {
+            transform: scale(0.98);
+            background: #0fa22a60;
+            transition: 0.05s;
+        }
+
+        .scan-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            filter: grayscale(0.1);
+        }
+
+        /* Прогресс-бар (анимированная линия) */
+        .progress-area {
+            width: 100%;
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .progress-label {
+            font-size: 0.7rem;
+            color: #8fcca5;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .progress-bar-bg {
+            background: #13241f;
+            border-radius: 20px;
+            height: 6px;
+            width: 100%;
+            overflow: hidden;
+            box-shadow: inset 0 0 4px #000;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #0fa, #6fcf97);
+            border-radius: 20px;
+            box-shadow: 0 0 6px #0fa;
+            transition: width 0.1s linear; /* будет управляться js плавно */
+        }
+
+        /* Кнопка протокола Gamma */
+        .gamma-area {
+            width: 100%;
+            display: none;
+            justify-content: center;
+            margin-top: 4px;
+        }
+
+        .gamma-button {
+            font-size: 0.9rem;
+            font-weight: 600;
+            font-family: 'Share Tech Mono', 'Fira Code', monospace;
+            background: rgba(40, 10, 30, 0.7);
+            backdrop-filter: blur(4px);
+            padding: 8px 20px;
+            border-radius: 40px;
+            border: 1px solid #ff66aa;
+            color: #ff88cc;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 6px rgba(255, 102, 170, 0.4);
+        }
+
+        .gamma-button:hover {
+            background: #ff66aa30;
+            border-color: #ffccff;
+            color: #ffccff;
+            box-shadow: 0 0 12px #ff66aa;
+            transform: scale(1.02);
+        }
+
+        .gamma-button:active {
+            transform: scale(0.98);
+        }
+
+        /* НИЖНЯЯ СТРОКА */
+        .footer-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            padding-top: 1.2rem;
+            border-top: 1px solid rgba(0, 255, 170, 0.4);
+        }
+
+        .sys-badge {
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #0fa, #3effb3);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 6px #0fa;
+        }
+
+        .info-tag {
+            font-size: 0.8rem;
+            color: #9befc4;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .info-tag span {
+            border-left: 2px solid #0fa;
+            padding-left: 10px;
+        }
+
+        /* Эффект сканирования */
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent 0%, rgba(0, 255, 170, 0.05) 50%, transparent 100%);
+            pointer-events: none;
+            animation: scan 6s linear infinite;
+            z-index: 2;
+            border-radius: 28px;
+        }
+
+        @keyframes scan {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(200%); }
+        }
+
+        /* Адаптивность */
+        @media (max-width: 720px) {
+            .terminal {
+                padding: 1.2rem;
+            }
+            .protocol-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .user-name {
+                font-size: 1.6rem;
+            }
+            .sys-badge {
+                font-size: 1.4rem;
+            }
+            .metric-panel {
+                border-right: none;
+                border-left: 3px solid #0fa;
+                text-align: center;
+            }
+            .user-panel {
+                border-left: 3px solid #0fa;
+            }
+            .last-hope-text {
+                font-size: 2.2rem;
+                letter-spacing: 2px;
+            }
+            .scan-button {
+                font-size: 0.8rem;
+                padding: 6px 18px;
+            }
+            .gamma-button {
+                font-size: 0.75rem;
+                padding: 6px 14px;
+            }
+        }
+
+        /* Декоративный уголок */
+        .hud-corner {
+            position: absolute;
+            bottom: 15px;
+            left: 20px;
+            font-size: 0.65rem;
+            color: #2f8b6b;
+            z-index: 20;
+            font-family: monospace;
+            background: rgba(0,0,0,0.4);
+            padding: 4px 8px;
+            border-radius: 12px;
+            backdrop-filter: blur(4px);
+            pointer-events: none;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Major+Mono+Display&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="terminal">
+    <div class="scan-line"></div>
+
+    <div class="protocol-grid">
+        <div class="user-panel">
+            <div class="user-label">// идентификация</div>
+            <div class="user-name">
+                USER: <span>UNKNOWN</span>
+            </div>
+        </div>
+        <div class="metric-panel">
+            <div class="last-hope-text">LAST HOPE</div>
+        </div>
+    </div>
+
+    <!-- Блок протокола: кнопка сканирования + динамические зоны -->
+    <div class="protocol-status" id="protocolStatus">
+        <div class="scan-row">
+            <button class="scan-button" id="scanBtn">[Сканировать]</button>
+        </div>
+        <!-- Зона для анимированной линии загрузки -->
+        <div class="progress-area" id="progressArea">
+            <div class="progress-label">⟳ АНАЛИЗ СИСТЕМЫ ⟳</div>
+            <div class="progress-bar-bg">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+        <!-- Зона для кнопки "протокол Gamma" -->
+        <div class="gamma-area" id="gammaArea">
+            <button class="gamma-button" id="gammaBtn">[протокол "Gamma"]</button>
+        </div>
+    </div>
+
+    <div class="footer-status">
+        <div class="sys-badge">
+            ⚙️ SR-A
+        </div>
+        <div class="info-tag">
+            <span>PROTOCOL: v.82.0_alpha</span>
+            <span>ENCRYPT: ACTIVE</span>
+            <span id="uptimeDisplay">UPTIME: 00:00:00</span>
+        </div>
+    </div>
+
+    <div class="hud-corner">
+        [ SECURE TERMINAL | SYS_ID: SR-A | LAST HOPE ]
+    </div>
+</div>
+
+<script>
+    (function() {
+        // Элементы
+        const scanBtn = document.getElementById('scanBtn');
+        const progressArea = document.getElementById('progressArea');
+        const progressFill = document.getElementById('progressFill');
+        const gammaArea = document.getElementById('gammaArea');
+        const gammaBtn = document.getElementById('gammaBtn');
+        const protocolStatus = document.getElementById('protocolStatus');
+        const lastHopeElement = document.querySelector('.last-hope-text');
+
+        let scanning = false;
+        let animationFrame = null;
+        let startTime = 0;
+        let animDuration = 2000; // 2 секунды
+
+        // Функция сброса состояния (убираем гамму, прячем прогресс, останавливаем анимацию)
+        function resetScanState(resetButton = true) {
+            if (animationFrame) {
+                cancelAnimationFrame(animationFrame);
+                animationFrame = null;
+            }
+            scanning = false;
+            // Скрываем прогресс-зону и гамма-зону
+            progressArea.style.display = 'none';
+            gammaArea.style.display = 'none';
+            // Сбрасываем ширину заполнения
+            progressFill.style.width = '0%';
+            if (resetButton) {
+                scanBtn.disabled = false;
+                scanBtn.textContent = '[Сканировать]';
+            }
+        }
+
+        // Функция для плавной анимации прогресса
+        function startProgressAnimation() {
+            return new Promise((resolve) => {
+                startTime = performance.now();
+                progressFill.style.width = '0%';
+                
+                function update(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    let percent = Math.min(1, elapsed / animDuration);
+                    const widthPercent = percent * 100;
+                    progressFill.style.width = `${widthPercent}%`;
+                    
+                    if (percent < 1) {
+                        animationFrame = requestAnimationFrame(update);
+                    } else {
+                        // Анимация завершена
+                        animationFrame = null;
+                        resolve();
+                    }
+                }
+                animationFrame = requestAnimationFrame(update);
+            });
+        }
+
+        // Обработчик клика по кнопке Сканировать
+        async function onScanClick() {
+            if (scanning) return; // уже сканируем
+            
+            // Сбрасываем предыдущее состояние (если есть гамма или незавершённое сканирование)
+            resetScanState(true);
+            
+            // Запускаем сканирование
+            scanning = true;
+            scanBtn.disabled = true;
+            scanBtn.textContent = '[СКАНИРОВАНИЕ...]';
+            
+            // Показываем зону прогресса
+            progressArea.style.display = 'flex';
+            gammaArea.style.display = 'none';
+            
+            // Небольшая задержка для плавности появления
+            await new Promise(r => setTimeout(r, 30));
+            
+            // Запускаем анимацию заполнения
+            await startProgressAnimation();
+            
+            // Анимация завершена: скрываем прогресс-бар
+            progressArea.style.display = 'none';
+            
+            // Показываем кнопку Gamma (окошко удлиняется автоматически)
+            gammaArea.style.display = 'flex';
+            
+            // Визуальный эффект: лёгкое свечение блока
+            protocolStatus.style.borderColor = '#ff66aa';
+            protocolStatus.style.boxShadow = '0 0 12px rgba(255, 102, 170, 0.3)';
+            setTimeout(() => {
+                protocolStatus.style.borderColor = '';
+                protocolStatus.style.boxShadow = '';
+            }, 600);
+            
+            // Эффект на надпись LAST HOPE (вспышка)
+            if (lastHopeElement) {
+                lastHopeElement.style.textShadow = '0 0 25px #ff6699, 0 0 45px #ff3366';
+                setTimeout(() => {
+                    lastHopeElement.style.textShadow = '';
+                }, 400);
+            }
+            
+            // Завершаем сканирование, кнопка снова активна, но теперь можно повторно запустить (сбросив Gamma)
+            scanning = false;
+            scanBtn.disabled = false;
+            scanBtn.textContent = '[Сканировать]';
+            
+            // Лог в консоль
+            console.log(`[СКАНИРОВАНИЕ ЗАВЕРШЕНО] ${new Date().toLocaleTimeString()} — Протокол Gamma готов`);
+        }
+        
+        // Обработчик для кнопки Gamma (можно добавить дополнительное действие)
+        if (gammaBtn) {
+            gammaBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                console.log(`[ПРОТОКОЛ GAMMA] Активирован в ${new Date().toLocaleTimeString()}`);
+                // Визуальный фидбек: мигание заголовка LAST HOPE
+                if (lastHopeElement) {
+                    lastHopeElement.style.animation = 'none';
+                    lastHopeElement.style.textShadow = '0 0 35px #ff00aa, 0 0 60px #ff3366';
+                    setTimeout(() => {
+                        lastHopeElement.style.animation = 'pulseRedGlow 1.8s infinite alternate';
+                        lastHopeElement.style.textShadow = '';
+                    }, 500);
+                }
+                // Дополнительный эффект на блок протокола
+                protocolStatus.style.borderColor = '#ffccff';
+                protocolStatus.style.transition = '0.2s';
+                setTimeout(() => {
+                    protocolStatus.style.borderColor = '';
+                }, 400);
+                // Можно вывести сообщение в консоль, но не блокируем интерфейс
+            });
+        }
+        
+        // Привязываем событие к кнопке сканирования
+        if (scanBtn) {
+            scanBtn.addEventListener('click', onScanClick);
+        }
+        
+        // Счётчик Uptime
+        const startTimeUptime = Date.now();
+        const uptimeElement = document.getElementById('uptimeDisplay');
+        
+        function updateUptime() {
+            if (!uptimeElement) return;
+            const elapsed = Math.floor((Date.now() - startTimeUptime) / 1000);
+            const hours = Math.floor(elapsed / 3600);
+            const minutes = Math.floor((elapsed % 3600) / 60);
+            const seconds = elapsed % 60;
+            uptimeElement.textContent = `UPTIME: ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        updateUptime();
+        setInterval(updateUptime, 1000);
+        
+        // Динамический заголовок
+        const originalTitle = "SR-A // LAST HOPE";
+        document.title = originalTitle;
+        setInterval(() => {
+            if (Math.random() > 0.88) {
+                document.title = "> " + originalTitle + " _";
+                setTimeout(() => { document.title = originalTitle; }, 400);
+            }
+        }, 4000);
+        
+        console.log("%c[SR-A] СИСТЕМА АКТИВНА // LAST HOPE", "color: #ff3366; font-family: monospace; font-size: 12px");
+        console.log("%c[USER: UNKNOWN]  |  SR-A ONLINE // LAST HOPE", "color: #6fcf97; font-family: monospace;");
+        console.log("%c[ИНСТРУКЦИЯ] Нажмите [Сканировать] — запустится анимация линии, затем появится кнопка [протокол \"Gamma\"]", "color: #88ffaa");
+    })();
+</script>
+</body>
+</html>
