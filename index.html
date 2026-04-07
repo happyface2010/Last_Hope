@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>LSTR // UNIT INTERFACE</title>
+    <title>Last Hope // UNIT INTERFACE</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            user-select: none; /* интерфейсный стиль */
+            user-select: none;
         }
 
         body {
@@ -21,7 +21,6 @@
             position: relative;
         }
 
-        /* Эффект сканирования (кинескоп) */
         body::before {
             content: "";
             position: fixed;
@@ -40,7 +39,6 @@
             z-index: 10;
         }
 
-        /* виньетка */
         body::after {
             content: "";
             position: fixed;
@@ -60,7 +58,6 @@
             z-index: 2;
         }
 
-        /* заголовок LSTR */
         .lstr-header {
             margin-bottom: 2.5rem;
             border-left: 4px solid #c53a1f;
@@ -69,9 +66,9 @@
         }
 
         .glitch {
-            font-size: 5rem;
+            font-size: 4.2rem;
             font-weight: 800;
-            letter-spacing: 8px;
+            letter-spacing: 6px;
             color: #e0e0e0;
             text-shadow: 
                 0.05em 0 0 rgba(197, 58, 31, 0.6),
@@ -104,20 +101,17 @@
             font-weight: bold;
         }
 
-        /* layout principal grille */
         .dashboard {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1.8rem;
         }
 
-        /* colonne gauche */
         .photo-section {
             display: flex;
             flex-direction: column;
         }
 
-        /* style polaroid vintage */
         .polaroid-card {
             background: #121418;
             border: 1px solid #2c2f3a;
@@ -149,7 +143,6 @@
             transition: filter 0.4s;
         }
 
-        /* effet dégradé / tache sur la photo */
         .photo-image::before {
             content: "";
             position: absolute;
@@ -213,7 +206,6 @@
             border-top: 1px solid #2a2e3c;
         }
 
-        /* grille droite 2x2 */
         .right-panels {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -261,7 +253,6 @@
             flex: 1;
         }
 
-        /* CARTE (SVG style) */
         .map-container svg {
             width: 100%;
             background: #050608;
@@ -277,7 +268,6 @@
             letter-spacing: 1px;
         }
 
-        /* diagnostics */
         .diag-list {
             list-style: none;
         }
@@ -320,7 +310,6 @@
             box-shadow: 0 0 4px #c53a1f;
         }
 
-        /* menu actions */
         .action-grid {
             display: flex;
             flex-wrap: wrap;
@@ -350,7 +339,6 @@
             transform: scale(0.98);
         }
 
-        /* selecteur objet */
         .obj-selector {
             display: flex;
             flex-direction: column;
@@ -396,7 +384,6 @@
             border-left: 2px solid #c53a1f;
         }
 
-        /* responsive */
         @media (max-width: 860px) {
             .dashboard {
                 grid-template-columns: 1fr;
@@ -406,7 +393,8 @@
                 grid-template-columns: 1fr 1fr;
             }
             .glitch {
-                font-size: 3rem;
+                font-size: 2.8rem;
+                letter-spacing: 4px;
             }
             body {
                 padding: 1rem;
@@ -422,7 +410,6 @@
             }
         }
 
-        /* footer ligne statique */
         .terminal-status {
             margin-top: 3rem;
             border-top: 1px solid #2c2f3c;
@@ -449,7 +436,7 @@
 
 <div class="container">
     <div class="lstr-header">
-        <div class="glitch">LSTR</div>
+        <div class="glitch">LAST HOPE</div>
         <div class="unit-badge">
             <span>◆ UNIT: ELSTER-512</span>
             <span>PENROSE · 218 · SIGNATURE</span>
@@ -473,7 +460,7 @@
                     Une photographie prise sur un tirage à développement instantané. Malgré la dégradation, on peut encore voir Ariane Yeong dessus.
                 </div>
                 <div class="scanline"></div>
-                <div style="font-size: 0.7rem; text-align: right; margin-top: 8px; color:#6c6f82;">tirage · instax · archivage LSTR</div>
+                <div style="font-size: 0.7rem; text-align: right; margin-top: 8px; color:#6c6f82;">tirage · instax · archivage LAST HOPE</div>
             </div>
         </div>
 
@@ -495,7 +482,7 @@
                             <text x="20" y="105" fill="#af947a" font-size="6">⚙️ Salle Rituel</text>
                             <text x="130" y="110" fill="#9c8266" font-size="5">Archives</text>
                             <line x1="100" y1="15" x2="100" y2="10" stroke="#b5764e" stroke-width="1"/>
-                            <text x="108" y="12" fill="#b5764e" font-size="5">LSTR</text>
+                            <text x="108" y="12" fill="#b5764e" font-size="5">LAST HOPE</text>
                         </svg>
                         <div class="map-legend">▲ POSITION ACTUELLE | ZONE D'OPÉRATION</div>
                     </div>
@@ -557,21 +544,18 @@
     </div>
 
     <div class="terminal-status">
-        <div>⚡ LSTR // UNITÉ DE TRAITEMENT MNÉMONIQUE</div>
+        <div>⚡ LAST HOPE // UNITÉ DE TRAITEMENT MNÉMONIQUE</div>
         <div>⏣ DIAGNOSTIC : MODE OPÉRATIONNEL DÉGRADÉ</div>
-        <div>⏲ 04:07:22 [UTC+8]</div>
+        <div>⏲ 04:07:22 [UTC]</div>
     </div>
 </div>
 
-<!-- petite interaction -->
 <script>
     (function() {
-        // Action buttons (menu actions)
         const actionBtns = document.querySelectorAll('.action-btn');
         actionBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const action = btn.getAttribute('data-action') || btn.innerText.trim();
-                // simulation retour interface
                 const fakeConsole = document.createElement('div');
                 fakeConsole.innerText = `⌘ ACTION: ${action.toUpperCase()} — tentative... signal reçu.`;
                 fakeConsole.style.position = 'fixed';
@@ -588,13 +572,11 @@
                 fakeConsole.style.borderRadius = '2px';
                 document.body.appendChild(fakeConsole);
                 setTimeout(() => { fakeConsole.style.opacity = '0'; setTimeout(() => fakeConsole.remove(), 800); }, 1500);
-                // court effet visuel sur le bouton
                 btn.style.transform = 'scale(0.96)';
                 setTimeout(() => { btn.style.transform = ''; }, 120);
             });
         });
 
-        // selecteur objet + validation
         const selectEl = document.getElementById('objectSelect');
         const validateBtn = document.getElementById('validerObjetBtn');
         const feedbackDiv = document.getElementById('selectionFeedback');
@@ -605,13 +587,11 @@
                 feedbackDiv.innerHTML = `✓ OBJET SÉLECTIONNÉ : ${selectedObj.toUpperCase()} // INITIALISATION PROTOCOLE.`;
                 feedbackDiv.style.color = "#e6bd8a";
                 feedbackDiv.style.borderLeftColor = "#c53a1f";
-                // simulation effet diagnostic
                 const diagWarning = document.querySelector('.diag-list li:nth-child(2) .diag-value');
                 if(diagWarning) {
                     diagWarning.style.animation = 'none';
                     setTimeout(() => { if(diagWarning) diagWarning.style.animation = 'pulse 1.2s infinite'; }, 100);
                 }
-                // petit effet secondaire: rappel photo
                 const photoZone = document.querySelector('.photo-image');
                 if(photoZone) {
                     photoZone.style.filter = 'grayscale(0.5) contrast(1.2) brightness(0.9)';
@@ -620,7 +600,6 @@
             });
         }
 
-        // Horloge simulateur temps réel dans le footer
         function updateClock() {
             const clockSpan = document.querySelector('.terminal-status div:last-child');
             if(clockSpan) {
@@ -634,7 +613,6 @@
         updateClock();
         setInterval(updateClock, 1000);
 
-        // ajouter une petite animation "carte" interactive au clic svg? juste pour ambiance
         const mapSvg = document.querySelector('.map-container svg');
         if(mapSvg) {
             mapSvg.addEventListener('click', (e) => {
@@ -654,7 +632,6 @@
             });
         }
 
-        // effet dégradé photo supplémentaire (interaction simulation)
         const polaroidDiv = document.querySelector('.polaroid-card');
         if(polaroidDiv) {
             polaroidDiv.addEventListener('mouseenter', () => {
