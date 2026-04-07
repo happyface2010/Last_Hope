@@ -261,14 +261,14 @@
             background: linear-gradient(90deg, #0fa, #6fcf97);
             border-radius: 20px;
             box-shadow: 0 0 6px #0fa;
-            transition: width 0.1s linear; /* будет управляться js плавно */
+            transition: width 0.1s linear;
         }
 
-        /* Кнопка протокола Gamma */
+        /* Зона для кнопки Gamma — смещена влево, тёмно-красный цвет */
         .gamma-area {
             width: 100%;
             display: none;
-            justify-content: center;
+            justify-content: flex-start;  /* Смещение влево */
             margin-top: 4px;
         }
 
@@ -276,24 +276,24 @@
             font-size: 0.9rem;
             font-weight: 600;
             font-family: 'Share Tech Mono', 'Fira Code', monospace;
-            background: rgba(40, 10, 30, 0.7);
+            background: rgba(80, 0, 0, 0.85);      /* тёмно-красный фон */
             backdrop-filter: blur(4px);
             padding: 8px 20px;
             border-radius: 40px;
-            border: 1px solid #ff66aa;
-            color: #ff88cc;
+            border: 1px solid #8b0000;              /* тёмно-красная граница */
+            color: #ffaaaa;                         /* светлый красный текст */
             text-transform: uppercase;
             letter-spacing: 2px;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 0 6px rgba(255, 102, 170, 0.4);
+            box-shadow: 0 0 6px rgba(139, 0, 0, 0.6);
         }
 
         .gamma-button:hover {
-            background: #ff66aa30;
-            border-color: #ffccff;
-            color: #ffccff;
-            box-shadow: 0 0 12px #ff66aa;
+            background: rgba(139, 0, 0, 0.9);
+            border-color: #ff4444;
+            color: #ffcccc;
+            box-shadow: 0 0 12px #8b0000;
             transform: scale(1.02);
         }
 
@@ -440,7 +440,7 @@
                 <div class="progress-fill" id="progressFill"></div>
             </div>
         </div>
-        <!-- Зона для кнопки "протокол Gamma" -->
+        <!-- Зона для кнопки "протокол Gamma" (сдвинута влево, тёмно-красная) -->
         <div class="gamma-area" id="gammaArea">
             <button class="gamma-button" id="gammaBtn">[протокол "Gamma"]</button>
         </div>
@@ -476,7 +476,7 @@
         let scanning = false;
         let animationFrame = null;
         let startTime = 0;
-        let animDuration = 2000; // 2 секунды
+        const animDuration = 2000; // 2 секунды
 
         // Функция сброса состояния (убираем гамму, прячем прогресс, останавливаем анимацию)
         function resetScanState(resetButton = true) {
@@ -485,10 +485,8 @@
                 animationFrame = null;
             }
             scanning = false;
-            // Скрываем прогресс-зону и гамма-зону
             progressArea.style.display = 'none';
             gammaArea.style.display = 'none';
-            // Сбрасываем ширину заполнения
             progressFill.style.width = '0%';
             if (resetButton) {
                 scanBtn.disabled = false;
@@ -511,7 +509,6 @@
                     if (percent < 1) {
                         animationFrame = requestAnimationFrame(update);
                     } else {
-                        // Анимация завершена
                         animationFrame = null;
                         resolve();
                     }
@@ -522,33 +519,23 @@
 
         // Обработчик клика по кнопке Сканировать
         async function onScanClick() {
-            if (scanning) return; // уже сканируем
+            if (scanning) return;
             
-            // Сбрасываем предыдущее состояние (если есть гамма или незавершённое сканирование)
             resetScanState(true);
             
-            // Запускаем сканирование
             scanning = true;
             scanBtn.disabled = true;
             scanBtn.textContent = '[СКАНИРОВАНИЕ...]';
             
-            // Показываем зону прогресса
             progressArea.style.display = 'flex';
             gammaArea.style.display = 'none';
             
-            // Небольшая задержка для плавности появления
             await new Promise(r => setTimeout(r, 30));
-            
-            // Запускаем анимацию заполнения
             await startProgressAnimation();
             
-            // Анимация завершена: скрываем прогресс-бар
             progressArea.style.display = 'none';
-            
-            // Показываем кнопку Gamma (окошко удлиняется автоматически)
             gammaArea.style.display = 'flex';
             
-            // Визуальный эффект: лёгкое свечение блока
             protocolStatus.style.borderColor = '#ff66aa';
             protocolStatus.style.boxShadow = '0 0 12px rgba(255, 102, 170, 0.3)';
             setTimeout(() => {
@@ -556,7 +543,6 @@
                 protocolStatus.style.boxShadow = '';
             }, 600);
             
-            // Эффект на надпись LAST HOPE (вспышка)
             if (lastHopeElement) {
                 lastHopeElement.style.textShadow = '0 0 25px #ff6699, 0 0 45px #ff3366';
                 setTimeout(() => {
@@ -564,40 +550,33 @@
                 }, 400);
             }
             
-            // Завершаем сканирование, кнопка снова активна, но теперь можно повторно запустить (сбросив Gamma)
             scanning = false;
             scanBtn.disabled = false;
             scanBtn.textContent = '[Сканировать]';
             
-            // Лог в консоль
             console.log(`[СКАНИРОВАНИЕ ЗАВЕРШЕНО] ${new Date().toLocaleTimeString()} — Протокол Gamma готов`);
         }
         
-        // Обработчик для кнопки Gamma (можно добавить дополнительное действие)
+        // Обработчик для кнопки Gamma — переход на gamma protocol.html
         if (gammaBtn) {
             gammaBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                console.log(`[ПРОТОКОЛ GAMMA] Активирован в ${new Date().toLocaleTimeString()}`);
-                // Визуальный фидбек: мигание заголовка LAST HOPE
+                console.log(`[ПРОТОКОЛ GAMMA] Переход на gamma protocol.html в ${new Date().toLocaleTimeString()}`);
+                // Дополнительный визуальный эффект перед переходом
                 if (lastHopeElement) {
                     lastHopeElement.style.animation = 'none';
                     lastHopeElement.style.textShadow = '0 0 35px #ff00aa, 0 0 60px #ff3366';
                     setTimeout(() => {
                         lastHopeElement.style.animation = 'pulseRedGlow 1.8s infinite alternate';
-                        lastHopeElement.style.textShadow = '';
-                    }, 500);
+                    }, 200);
                 }
-                // Дополнительный эффект на блок протокола
-                protocolStatus.style.borderColor = '#ffccff';
-                protocolStatus.style.transition = '0.2s';
+                // Задержка для плавности (опционально)
                 setTimeout(() => {
-                    protocolStatus.style.borderColor = '';
-                }, 400);
-                // Можно вывести сообщение в консоль, но не блокируем интерфейс
+                    window.location.href = "gamma protocol.html";
+                }, 150);
             });
         }
         
-        // Привязываем событие к кнопке сканирования
         if (scanBtn) {
             scanBtn.addEventListener('click', onScanClick);
         }
@@ -629,7 +608,7 @@
         
         console.log("%c[SR-A] СИСТЕМА АКТИВНА // LAST HOPE", "color: #ff3366; font-family: monospace; font-size: 12px");
         console.log("%c[USER: UNKNOWN]  |  SR-A ONLINE // LAST HOPE", "color: #6fcf97; font-family: monospace;");
-        console.log("%c[ИНСТРУКЦИЯ] Нажмите [Сканировать] — запустится анимация линии, затем появится кнопка [протокол \"Gamma\"]", "color: #88ffaa");
+        console.log("%c[ИНСТРУКЦИЯ] Нажмите [Сканировать] → анимация → появление кнопки [протокол \"Gamma\"] (слева, тёмно-красная). Она ведёт на gamma protocol.html", "color: #88ffaa");
     })();
 </script>
 </body>
