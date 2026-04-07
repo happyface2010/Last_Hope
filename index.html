@@ -139,10 +139,20 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            filter: grayscale(0.7) contrast(1.1) brightness(0.85);
+            overflow: hidden;
+        }
+
+        /* GIF remplit tout l'espace */
+        .photo-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            filter: grayscale(0.2) contrast(1.05) brightness(0.9);
             transition: filter 0.4s;
         }
 
+        /* Effets de dégradation / vieillissement superposés à l'image */
         .photo-image::before {
             content: "";
             position: absolute;
@@ -150,40 +160,19 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 30% 40%, rgba(80, 40, 20, 0.2), transparent 70%);
+            background: radial-gradient(circle at 30% 40%, rgba(80, 40, 20, 0.25), transparent 70%);
             pointer-events: none;
             mix-blend-mode: multiply;
+            z-index: 2;
         }
 
         .photo-image::after {
             content: "";
             position: absolute;
             inset: 0;
-            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1) 0px, rgba(0,0,0,0.1) 1px, transparent 1px, transparent 3px);
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.12) 0px, rgba(0,0,0,0.12) 1px, transparent 1px, transparent 3px);
             pointer-events: none;
-        }
-
-        .portrait-symbol {
-            text-align: center;
-            font-size: 1.7rem;
-            letter-spacing: 4px;
-            color: #cdc9c0;
-            background: rgba(0,0,0,0.5);
-            padding: 1.2rem;
-            width: 80%;
-            backdrop-filter: blur(2px);
-            font-family: monospace;
-            border: 1px dashed #a05a3a;
-            text-transform: uppercase;
-            font-weight: bold;
-            z-index: 2;
-        }
-
-        .portrait-symbol span {
-            display: block;
-            font-size: 0.8rem;
-            margin-top: 10px;
-            color: #bc8f6b;
+            z-index: 3;
         }
 
         .photo-caption {
@@ -444,15 +433,14 @@
     </div>
 
     <div class="dashboard">
-        <!-- colonne gauche PHOTOGRAPHIE -->
+        <!-- colonne gauche PHOTOGRAPHIE avec GIF -->
         <div class="photo-section">
             <div class="polaroid-card">
                 <div class="photo-frame">
                     <div class="photo-image">
-                        <div class="portrait-symbol">
-                            [ A R I A N E · Y E O N G ]
-                            <span>⚬  mémoire dégradée ⚬</span>
-                        </div>
+                        <!-- GIF remplaçant le bloc texte "Ariane Yeong" -->
+                        <img src="https://i.pinimg.com/originals/9d/e5/6b/9de56bdc4fff3249bd492c2247c5db82.gif" 
+                             alt="Ariane Yeong - mémoire dégradée">
                     </div>
                 </div>
                 <div class="photo-caption">PHOTOGRAPHIE</div>
@@ -592,10 +580,10 @@
                     diagWarning.style.animation = 'none';
                     setTimeout(() => { if(diagWarning) diagWarning.style.animation = 'pulse 1.2s infinite'; }, 100);
                 }
-                const photoZone = document.querySelector('.photo-image');
-                if(photoZone) {
-                    photoZone.style.filter = 'grayscale(0.5) contrast(1.2) brightness(0.9)';
-                    setTimeout(() => { if(photoZone) photoZone.style.filter = 'grayscale(0.7) contrast(1.1) brightness(0.85)'; }, 500);
+                const photoImg = document.querySelector('.photo-image img');
+                if(photoImg) {
+                    photoImg.style.filter = 'grayscale(0.1) contrast(1.15) brightness(0.85)';
+                    setTimeout(() => { if(photoImg) photoImg.style.filter = 'grayscale(0.2) contrast(1.05) brightness(0.9)'; }, 500);
                 }
             });
         }
