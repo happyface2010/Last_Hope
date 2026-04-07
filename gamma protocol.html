@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>LSTR // UNIT INTERFACE</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none; /* интерфейсный стиль */
+        }
+
+        body {
+            background: radial-gradient(circle at 20% 30%, #0b0c10, #030405);
+            min-height: 100vh;
+            font-family: 'Courier New', 'IBM Plex Mono', 'VT323', monospace;
+            color: #d9d9d9;
+            padding: 2rem 1.5rem;
+            position: relative;
+        }
+
+        /* Эффект сканирования (кинескоп) */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.08) 0px,
+                rgba(0, 0, 0, 0.08) 2px,
+                transparent 2px,
+                transparent 6px
+            );
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* виньетка */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.6);
+            pointer-events: none;
+            z-index: 11;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* заголовок LSTR */
+        .lstr-header {
+            margin-bottom: 2.5rem;
+            border-left: 4px solid #c53a1f;
+            padding-left: 1.5rem;
+            transition: all 0.2s;
+        }
+
+        .glitch {
+            font-size: 5rem;
+            font-weight: 800;
+            letter-spacing: 8px;
+            color: #e0e0e0;
+            text-shadow: 
+                0.05em 0 0 rgba(197, 58, 31, 0.6),
+                -0.05em -0.025em 0 rgba(30, 150, 150, 0.5);
+            animation: glitch-skew 3s infinite alternate;
+            font-family: monospace;
+            text-transform: uppercase;
+        }
+
+        @keyframes glitch-skew {
+            0% { transform: skew(0deg); text-shadow: 0.05em 0 0 rgba(197, 58, 31, 0.6), -0.05em -0.025em 0 rgba(30, 150, 150, 0.5);}
+            95% { transform: skew(0deg); text-shadow: 0.05em 0 0 rgba(197, 58, 31, 0.6), -0.05em -0.025em 0 rgba(30, 150, 150, 0.5);}
+            100% { transform: skew(-1.5deg); text-shadow: -0.05em 0.03em 0 #c53a1f, 0.07em -0.02em 0 #1e9696;}
+        }
+
+        .unit-badge {
+            font-size: 0.85rem;
+            color: #b0b0b0;
+            letter-spacing: 2px;
+            margin-top: 0.5rem;
+            display: flex;
+            gap: 2rem;
+            border-top: 1px solid #2a2e3a;
+            padding-top: 0.6rem;
+            width: fit-content;
+        }
+
+        .unit-badge span {
+            color: #c53a1f;
+            font-weight: bold;
+        }
+
+        /* layout principal grille */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.8rem;
+        }
+
+        /* colonne gauche */
+        .photo-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* style polaroid vintage */
+        .polaroid-card {
+            background: #121418;
+            border: 1px solid #2c2f3a;
+            padding: 1.2rem 1rem 1.4rem 1rem;
+            box-shadow: 12px 12px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.03);
+            transition: transform 0.2s ease;
+        }
+
+        .photo-frame {
+            background: #1f2129;
+            padding: 12px;
+            border: 1px solid #3a3f4e;
+            margin-bottom: 1.2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .photo-image {
+            background: #0a0c10;
+            aspect-ratio: 4 / 3;
+            width: 100%;
+            position: relative;
+            background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.2) 0px, rgba(0,0,0,0.2) 2px, transparent 2px, transparent 8px);
+            border: 1px solid #2c2f3a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            filter: grayscale(0.7) contrast(1.1) brightness(0.85);
+            transition: filter 0.4s;
+        }
+
+        /* effet dégradé / tache sur la photo */
+        .photo-image::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 40%, rgba(80, 40, 20, 0.2), transparent 70%);
+            pointer-events: none;
+            mix-blend-mode: multiply;
+        }
+
+        .photo-image::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1) 0px, rgba(0,0,0,0.1) 1px, transparent 1px, transparent 3px);
+            pointer-events: none;
+        }
+
+        .portrait-symbol {
+            text-align: center;
+            font-size: 1.7rem;
+            letter-spacing: 4px;
+            color: #cdc9c0;
+            background: rgba(0,0,0,0.5);
+            padding: 1.2rem;
+            width: 80%;
+            backdrop-filter: blur(2px);
+            font-family: monospace;
+            border: 1px dashed #a05a3a;
+            text-transform: uppercase;
+            font-weight: bold;
+            z-index: 2;
+        }
+
+        .portrait-symbol span {
+            display: block;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            color: #bc8f6b;
+        }
+
+        .photo-caption {
+            font-size: 1.3rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 0.6rem;
+            color: #e6c8a6;
+            border-left: 3px solid #c53a1f;
+            padding-left: 12px;
+        }
+
+        .photo-desc {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #b8b8c8;
+            background: #0f1117;
+            padding: 0.8rem;
+            font-style: italic;
+            border-top: 1px solid #2a2e3c;
+        }
+
+        /* grille droite 2x2 */
+        .right-panels {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            align-content: start;
+        }
+
+        .panel {
+            background: #0f1117ea;
+            backdrop-filter: blur(2px);
+            border: 1px solid #2e3343;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+            transition: all 0.2s linear;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel:hover {
+            border-color: #c53a1f70;
+            box-shadow: 0 0 8px rgba(197, 58, 31, 0.3);
+        }
+
+        .panel-header {
+            background: #1a1d27;
+            padding: 0.7rem 1rem;
+            border-bottom: 1px solid #2c3142;
+            font-weight: bold;
+            letter-spacing: 2px;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            color: #ddc7a2;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .panel-header::before {
+            content: "▌";
+            color: #c53a1f;
+            font-weight: bold;
+        }
+
+        .panel-content {
+            padding: 1.2rem 1rem;
+            flex: 1;
+        }
+
+        /* CARTE (SVG style) */
+        .map-container svg {
+            width: 100%;
+            background: #050608;
+            border-radius: 4px;
+            border: 1px solid #2f3548;
+        }
+
+        .map-legend {
+            font-size: 0.7rem;
+            margin-top: 10px;
+            text-align: center;
+            color: #7f8c8d;
+            letter-spacing: 1px;
+        }
+
+        /* diagnostics */
+        .diag-list {
+            list-style: none;
+        }
+        .diag-list li {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            font-size: 0.8rem;
+            border-bottom: 1px dotted #2f3542;
+            padding-bottom: 6px;
+        }
+        .diag-label {
+            color: #b5ad8c;
+        }
+        .diag-value {
+            font-family: monospace;
+            font-weight: bold;
+        }
+        .warning {
+            color: #c53a1f;
+            text-shadow: 0 0 3px rgba(197,58,31,0.5);
+            animation: pulse 1.2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+        .progress-bar {
+            background: #23272f;
+            height: 5px;
+            width: 100%;
+            margin-top: 5px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: #c53a1f;
+            width: 68%;
+            height: 100%;
+            box-shadow: 0 0 4px #c53a1f;
+        }
+
+        /* menu actions */
+        .action-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 6px;
+        }
+        .action-btn {
+            background: #1a1e2a;
+            border: 1px solid #434b60;
+            padding: 8px 12px;
+            font-family: monospace;
+            font-weight: bold;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #ddd9ce;
+            cursor: pointer;
+            transition: all 0.1s linear;
+            flex: 1 0 auto;
+            text-align: center;
+            letter-spacing: 1.5px;
+        }
+        .action-btn:hover {
+            background: #c53a1f;
+            border-color: #e08050;
+            color: #0a0b10;
+            box-shadow: 0 0 8px #c53a1f;
+            transform: scale(0.98);
+        }
+
+        /* selecteur objet */
+        .obj-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .custom-select {
+            background: #0f1119;
+            border: 1px solid #3d435b;
+            padding: 8px;
+            font-family: monospace;
+            color: #f2e8cf;
+            font-weight: bold;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        .custom-select option {
+            background: #12141c;
+        }
+        .select-btn {
+            background: #232838;
+            border: 1px solid #5f5f7a;
+            padding: 7px;
+            font-family: monospace;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.1s;
+            color: #e6dcc0;
+            text-align: center;
+        }
+        .select-btn:hover {
+            background: #c53a1f;
+            border-color: #ff8c5a;
+            color: black;
+        }
+        .feedback {
+            margin-top: 8px;
+            font-size: 0.7rem;
+            background: #00000066;
+            padding: 6px;
+            text-align: center;
+            color: #bfa87c;
+            border-left: 2px solid #c53a1f;
+        }
+
+        /* responsive */
+        @media (max-width: 860px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .right-panels {
+                grid-template-columns: 1fr 1fr;
+            }
+            .glitch {
+                font-size: 3rem;
+            }
+            body {
+                padding: 1rem;
+            }
+        }
+        @media (max-width: 550px) {
+            .right-panels {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+            .action-grid {
+                flex-direction: column;
+            }
+        }
+
+        /* footer ligne statique */
+        .terminal-status {
+            margin-top: 3rem;
+            border-top: 1px solid #2c2f3c;
+            padding-top: 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: #6f788b;
+            font-family: monospace;
+        }
+        button, select {
+            background: none;
+            border: none;
+        }
+        .scanline {
+            width: 100%;
+            height: 2px;
+            background: rgba(197, 58, 31, 0.3);
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="lstr-header">
+        <div class="glitch">LSTR</div>
+        <div class="unit-badge">
+            <span>◆ UNIT: ELSTER-512</span>
+            <span>PENROSE · 218 · SIGNATURE</span>
+        </div>
+    </div>
+
+    <div class="dashboard">
+        <!-- colonne gauche PHOTOGRAPHIE -->
+        <div class="photo-section">
+            <div class="polaroid-card">
+                <div class="photo-frame">
+                    <div class="photo-image">
+                        <div class="portrait-symbol">
+                            [ A R I A N E · Y E O N G ]
+                            <span>⚬  mémoire dégradée ⚬</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="photo-caption">PHOTOGRAPHIE</div>
+                <div class="photo-desc">
+                    Une photographie prise sur un tirage à développement instantané. Malgré la dégradation, on peut encore voir Ariane Yeong dessus.
+                </div>
+                <div class="scanline"></div>
+                <div style="font-size: 0.7rem; text-align: right; margin-top: 8px; color:#6c6f82;">tirage · instax · archivage LSTR</div>
+            </div>
+        </div>
+
+        <!-- colonne droite : 4 modules -->
+        <div class="right-panels">
+            <!-- CARTE -->
+            <div class="panel">
+                <div class="panel-header">CARTE · SECTEUR 7</div>
+                <div class="panel-content">
+                    <div class="map-container">
+                        <svg viewBox="0 0 180 130" xmlns="http://www.w3.org/2000/svg" style="background:#07090e;">
+                            <rect x="10" y="15" width="45" height="35" fill="none" stroke="#a55a3a" stroke-width="1.2" stroke-dasharray="2 2"/>
+                            <rect x="70" y="15" width="45" height="35" fill="none" stroke="#b46a48" stroke-width="1.2"/>
+                            <rect x="130" y="15" width="38" height="35" fill="none" stroke="#7e5d47" stroke-width="1"/>
+                            <circle cx="92" cy="33" r="4" fill="#c53a1f" stroke="none" opacity="0.8"/>
+                            <path d="M32 50 L32 85 L65 85" stroke="#6c6356" stroke-width="1" fill="none"/>
+                            <path d="M92 50 L92 80 L130 80" stroke="#6c6356" stroke-width="1" fill="none"/>
+                            <rect x="15" y="90" width="50" height="25" fill="#141824" stroke="#635d4e" stroke-width="0.8"/>
+                            <text x="20" y="105" fill="#af947a" font-size="6">⚙️ Salle Rituel</text>
+                            <text x="130" y="110" fill="#9c8266" font-size="5">Archives</text>
+                            <line x1="100" y1="15" x2="100" y2="10" stroke="#b5764e" stroke-width="1"/>
+                            <text x="108" y="12" fill="#b5764e" font-size="5">LSTR</text>
+                        </svg>
+                        <div class="map-legend">▲ POSITION ACTUELLE | ZONE D'OPÉRATION</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DIAGNOSTICS -->
+            <div class="panel">
+                <div class="panel-header">DIAGNOSTICS</div>
+                <div class="panel-content">
+                    <ul class="diag-list">
+                        <li><span class="diag-label">NEURAL BRIDGE</span><span class="diag-value">87%</span></li>
+                        <li><span class="diag-label">MEMORY INTEGRITY</span><span class="diag-value warning">CORRUPTION DÉTECTÉE</span></li>
+                        <li><span class="diag-label">PERSONALITY DRIFT</span><span class="diag-value warning">CRITIQUE</span></li>
+                        <li><span class="diag-label">BIO-RÉSONANCE</span><span class="diag-value">instable <span style="color:#e68a4a;">∿</span></span></li>
+                    </ul>
+                    <div class="progress-bar"><div class="progress-fill" style="width: 44%;"></div></div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 12px; font-size:0.7rem;">
+                        <span>✔️ UNITÉ FONCTIONNELLE</span>
+                        <span style="color:#c53a1f;">⚠️ ALERTE MNEMOS</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MENU ACTIONS -->
+            <div class="panel">
+                <div class="panel-header">MENU ACTIONS</div>
+                <div class="panel-content">
+                    <div class="action-grid">
+                        <button class="action-btn" data-action="examiner">EXAMINER</button>
+                        <button class="action-btn" data-action="parler">PARLER</button>
+                        <button class="action-btn" data-action="utiliser">UTILISER</button>
+                        <button class="action-btn" data-action="combiner">COMBINER</button>
+                        <button class="action-btn" data-action="analyser">ANALYSER</button>
+                    </div>
+                    <div class="scanline" style="margin: 12px 0 6px 0;"></div>
+                    <div style="font-size: 0.7rem; color:#928d78; text-align:center;">séquence disponible → interface opérationnelle</div>
+                </div>
+            </div>
+
+            <!-- SELECTIONNER OBJET -->
+            <div class="panel">
+                <div class="panel-header">SELECTIONNER OBJET</div>
+                <div class="panel-content">
+                    <div class="obj-selector">
+                        <select id="objectSelect" class="custom-select">
+                            <option value="Médailon brisé">Médailon brisé</option>
+                            <option value="Lettre non scellée">Lettre non scellée</option>
+                            <option value="Module mémoire">Module mémoire (dégradé)</option>
+                            <option value="Cassette audio">Cassette audio — dernière voix</option>
+                            <option value="Fragment de photo">Fragment de photo (Ariane)</option>
+                        </select>
+                        <button id="validerObjetBtn" class="select-btn">VALIDER LA SÉLECTION</button>
+                        <div id="selectionFeedback" class="feedback">aucun objet sélectionné</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="terminal-status">
+        <div>⚡ LSTR // UNITÉ DE TRAITEMENT MNÉMONIQUE</div>
+        <div>⏣ DIAGNOSTIC : MODE OPÉRATIONNEL DÉGRADÉ</div>
+        <div>⏲ 04:07:22 [UTC+8]</div>
+    </div>
+</div>
+
+<!-- petite interaction -->
+<script>
+    (function() {
+        // Action buttons (menu actions)
+        const actionBtns = document.querySelectorAll('.action-btn');
+        actionBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const action = btn.getAttribute('data-action') || btn.innerText.trim();
+                // simulation retour interface
+                const fakeConsole = document.createElement('div');
+                fakeConsole.innerText = `⌘ ACTION: ${action.toUpperCase()} — tentative... signal reçu.`;
+                fakeConsole.style.position = 'fixed';
+                fakeConsole.style.bottom = '20px';
+                fakeConsole.style.right = '20px';
+                fakeConsole.style.backgroundColor = '#0b0e16';
+                fakeConsole.style.borderLeft = '3px solid #c53a1f';
+                fakeConsole.style.padding = '8px 14px';
+                fakeConsole.style.fontSize = '0.75rem';
+                fakeConsole.style.fontFamily = 'monospace';
+                fakeConsole.style.zIndex = '999';
+                fakeConsole.style.color = '#dacaa4';
+                fakeConsole.style.boxShadow = '0 0 12px black';
+                fakeConsole.style.borderRadius = '2px';
+                document.body.appendChild(fakeConsole);
+                setTimeout(() => { fakeConsole.style.opacity = '0'; setTimeout(() => fakeConsole.remove(), 800); }, 1500);
+                // court effet visuel sur le bouton
+                btn.style.transform = 'scale(0.96)';
+                setTimeout(() => { btn.style.transform = ''; }, 120);
+            });
+        });
+
+        // selecteur objet + validation
+        const selectEl = document.getElementById('objectSelect');
+        const validateBtn = document.getElementById('validerObjetBtn');
+        const feedbackDiv = document.getElementById('selectionFeedback');
+
+        if(validateBtn && selectEl && feedbackDiv) {
+            validateBtn.addEventListener('click', () => {
+                const selectedObj = selectEl.options[selectEl.selectedIndex]?.text || "objet inconnu";
+                feedbackDiv.innerHTML = `✓ OBJET SÉLECTIONNÉ : ${selectedObj.toUpperCase()} // INITIALISATION PROTOCOLE.`;
+                feedbackDiv.style.color = "#e6bd8a";
+                feedbackDiv.style.borderLeftColor = "#c53a1f";
+                // simulation effet diagnostic
+                const diagWarning = document.querySelector('.diag-list li:nth-child(2) .diag-value');
+                if(diagWarning) {
+                    diagWarning.style.animation = 'none';
+                    setTimeout(() => { if(diagWarning) diagWarning.style.animation = 'pulse 1.2s infinite'; }, 100);
+                }
+                // petit effet secondaire: rappel photo
+                const photoZone = document.querySelector('.photo-image');
+                if(photoZone) {
+                    photoZone.style.filter = 'grayscale(0.5) contrast(1.2) brightness(0.9)';
+                    setTimeout(() => { if(photoZone) photoZone.style.filter = 'grayscale(0.7) contrast(1.1) brightness(0.85)'; }, 500);
+                }
+            });
+        }
+
+        // Horloge simulateur temps réel dans le footer
+        function updateClock() {
+            const clockSpan = document.querySelector('.terminal-status div:last-child');
+            if(clockSpan) {
+                const now = new Date();
+                const hours = now.getUTCHours().toString().padStart(2,'0');
+                const minutes = now.getUTCMinutes().toString().padStart(2,'0');
+                const seconds = now.getUTCSeconds().toString().padStart(2,'0');
+                clockSpan.innerHTML = `⏲ ${hours}:${minutes}:${seconds} [UTC]`;
+            }
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        // ajouter une petite animation "carte" interactive au clic svg? juste pour ambiance
+        const mapSvg = document.querySelector('.map-container svg');
+        if(mapSvg) {
+            mapSvg.addEventListener('click', (e) => {
+                const fakeMsg = document.createElement('div');
+                fakeMsg.innerText = `📡 CARTE ANALYSÉE : CORRIDOR PRINCIPAL // ZONE D'IMPACT`;
+                fakeMsg.style.position = 'fixed';
+                fakeMsg.style.bottom = '70px';
+                fakeMsg.style.left = '20px';
+                fakeMsg.style.background = '#11141ecc';
+                fakeMsg.style.padding = '5px 12px';
+                fakeMsg.style.fontSize = '0.7rem';
+                fakeMsg.style.border = '1px solid #c53a1f';
+                fakeMsg.style.backdropFilter = 'blur(4px)';
+                fakeMsg.style.zIndex = '1000';
+                document.body.appendChild(fakeMsg);
+                setTimeout(() => fakeMsg.remove(), 1400);
+            });
+        }
+
+        // effet dégradé photo supplémentaire (interaction simulation)
+        const polaroidDiv = document.querySelector('.polaroid-card');
+        if(polaroidDiv) {
+            polaroidDiv.addEventListener('mouseenter', () => {
+                const photoDesc = document.querySelector('.photo-desc');
+                if(photoDesc) photoDesc.style.backgroundColor = '#181c26';
+            });
+            polaroidDiv.addEventListener('mouseleave', () => {
+                const photoDesc = document.querySelector('.photo-desc');
+                if(photoDesc) photoDesc.style.backgroundColor = '#0f1117';
+            });
+        }
+    })();
+</script>
+</body>
+</html>
