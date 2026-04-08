@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>LSTR // UNIT INTERFACE</title>
+    <title>Last Hope // UNIT INTERFACE</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            user-select: none; /* интерфейсный стиль */
+            user-select: none;
         }
 
         body {
@@ -21,7 +21,6 @@
             position: relative;
         }
 
-        /* Эффект сканирования (кинескоп) */
         body::before {
             content: "";
             position: fixed;
@@ -40,7 +39,6 @@
             z-index: 10;
         }
 
-        /* виньетка */
         body::after {
             content: "";
             position: fixed;
@@ -60,7 +58,6 @@
             z-index: 2;
         }
 
-        /* заголовок LSTR */
         .lstr-header {
             margin-bottom: 2.5rem;
             border-left: 4px solid #c53a1f;
@@ -69,9 +66,9 @@
         }
 
         .glitch {
-            font-size: 5rem;
+            font-size: 4.2rem;
             font-weight: 800;
-            letter-spacing: 8px;
+            letter-spacing: 6px;
             color: #e0e0e0;
             text-shadow: 
                 0.05em 0 0 rgba(197, 58, 31, 0.6),
@@ -104,20 +101,17 @@
             font-weight: bold;
         }
 
-        /* layout principal grille */
         .dashboard {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1.8rem;
         }
 
-        /* colonne gauche */
         .photo-section {
             display: flex;
             flex-direction: column;
         }
 
-        /* style polaroid vintage */
         .polaroid-card {
             background: #121418;
             border: 1px solid #2c2f3a;
@@ -145,11 +139,20 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            filter: grayscale(0.7) contrast(1.1) brightness(0.85);
+            overflow: hidden;
+        }
+
+        /* GIF remplit tout l'espace */
+        .photo-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            filter: grayscale(0.2) contrast(1.05) brightness(0.9);
             transition: filter 0.4s;
         }
 
-        /* effet dégradé / tache sur la photo */
+        /* Effets de dégradation / vieillissement superposés à l'image */
         .photo-image::before {
             content: "";
             position: absolute;
@@ -157,40 +160,19 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 30% 40%, rgba(80, 40, 20, 0.2), transparent 70%);
+            background: radial-gradient(circle at 30% 40%, rgba(80, 40, 20, 0.25), transparent 70%);
             pointer-events: none;
             mix-blend-mode: multiply;
+            z-index: 2;
         }
 
         .photo-image::after {
             content: "";
             position: absolute;
             inset: 0;
-            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1) 0px, rgba(0,0,0,0.1) 1px, transparent 1px, transparent 3px);
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.12) 0px, rgba(0,0,0,0.12) 1px, transparent 1px, transparent 3px);
             pointer-events: none;
-        }
-
-        .portrait-symbol {
-            text-align: center;
-            font-size: 1.7rem;
-            letter-spacing: 4px;
-            color: #cdc9c0;
-            background: rgba(0,0,0,0.5);
-            padding: 1.2rem;
-            width: 80%;
-            backdrop-filter: blur(2px);
-            font-family: monospace;
-            border: 1px dashed #a05a3a;
-            text-transform: uppercase;
-            font-weight: bold;
-            z-index: 2;
-        }
-
-        .portrait-symbol span {
-            display: block;
-            font-size: 0.8rem;
-            margin-top: 10px;
-            color: #bc8f6b;
+            z-index: 3;
         }
 
         .photo-caption {
@@ -213,7 +195,6 @@
             border-top: 1px solid #2a2e3c;
         }
 
-        /* grille droite 2x2 */
         .right-panels {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -261,7 +242,6 @@
             flex: 1;
         }
 
-        /* CARTE (SVG style) */
         .map-container svg {
             width: 100%;
             background: #050608;
@@ -277,7 +257,6 @@
             letter-spacing: 1px;
         }
 
-        /* diagnostics */
         .diag-list {
             list-style: none;
         }
@@ -320,7 +299,6 @@
             box-shadow: 0 0 4px #c53a1f;
         }
 
-        /* menu actions */
         .action-grid {
             display: flex;
             flex-wrap: wrap;
@@ -350,7 +328,6 @@
             transform: scale(0.98);
         }
 
-        /* selecteur objet */
         .obj-selector {
             display: flex;
             flex-direction: column;
@@ -396,7 +373,6 @@
             border-left: 2px solid #c53a1f;
         }
 
-        /* responsive */
         @media (max-width: 860px) {
             .dashboard {
                 grid-template-columns: 1fr;
@@ -406,7 +382,8 @@
                 grid-template-columns: 1fr 1fr;
             }
             .glitch {
-                font-size: 3rem;
+                font-size: 2.8rem;
+                letter-spacing: 4px;
             }
             body {
                 padding: 1rem;
@@ -422,7 +399,6 @@
             }
         }
 
-        /* footer ligne statique */
         .terminal-status {
             margin-top: 3rem;
             border-top: 1px solid #2c2f3c;
@@ -449,7 +425,7 @@
 
 <div class="container">
     <div class="lstr-header">
-        <div class="glitch">LSTR</div>
+        <div class="glitch">LAST HOPE</div>
         <div class="unit-badge">
             <span>◆ UNIT: ELSTER-512</span>
             <span>PENROSE · 218 · SIGNATURE</span>
@@ -457,15 +433,14 @@
     </div>
 
     <div class="dashboard">
-        <!-- colonne gauche PHOTOGRAPHIE -->
+        <!-- colonne gauche PHOTOGRAPHIE avec GIF -->
         <div class="photo-section">
             <div class="polaroid-card">
                 <div class="photo-frame">
                     <div class="photo-image">
-                        <div class="portrait-symbol">
-                            [ A R I A N E · Y E O N G ]
-                            <span>⚬  mémoire dégradée ⚬</span>
-                        </div>
+                        <!-- GIF remplaçant le bloc texte "Ariane Yeong" -->
+                        <img src="https://i.pinimg.com/originals/9d/e5/6b/9de56bdc4fff3249bd492c2247c5db82.gif" 
+                             alt="Ariane Yeong - mémoire dégradée">
                     </div>
                 </div>
                 <div class="photo-caption">PHOTOGRAPHIE</div>
@@ -473,7 +448,7 @@
                     Une photographie prise sur un tirage à développement instantané. Malgré la dégradation, on peut encore voir Ariane Yeong dessus.
                 </div>
                 <div class="scanline"></div>
-                <div style="font-size: 0.7rem; text-align: right; margin-top: 8px; color:#6c6f82;">tirage · instax · archivage LSTR</div>
+                <div style="font-size: 0.7rem; text-align: right; margin-top: 8px; color:#6c6f82;">tirage · instax · archivage LAST HOPE</div>
             </div>
         </div>
 
@@ -495,7 +470,7 @@
                             <text x="20" y="105" fill="#af947a" font-size="6">⚙️ Salle Rituel</text>
                             <text x="130" y="110" fill="#9c8266" font-size="5">Archives</text>
                             <line x1="100" y1="15" x2="100" y2="10" stroke="#b5764e" stroke-width="1"/>
-                            <text x="108" y="12" fill="#b5764e" font-size="5">LSTR</text>
+                            <text x="108" y="12" fill="#b5764e" font-size="5">LAST HOPE</text>
                         </svg>
                         <div class="map-legend">▲ POSITION ACTUELLE | ZONE D'OPÉRATION</div>
                     </div>
@@ -557,21 +532,18 @@
     </div>
 
     <div class="terminal-status">
-        <div>⚡ LSTR // UNITÉ DE TRAITEMENT MNÉMONIQUE</div>
+        <div>⚡ LAST HOPE // UNITÉ DE TRAITEMENT MNÉMONIQUE</div>
         <div>⏣ DIAGNOSTIC : MODE OPÉRATIONNEL DÉGRADÉ</div>
-        <div>⏲ 04:07:22 [UTC+8]</div>
+        <div>⏲ 04:07:22 [UTC]</div>
     </div>
 </div>
 
-<!-- petite interaction -->
 <script>
     (function() {
-        // Action buttons (menu actions)
         const actionBtns = document.querySelectorAll('.action-btn');
         actionBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const action = btn.getAttribute('data-action') || btn.innerText.trim();
-                // simulation retour interface
                 const fakeConsole = document.createElement('div');
                 fakeConsole.innerText = `⌘ ACTION: ${action.toUpperCase()} — tentative... signal reçu.`;
                 fakeConsole.style.position = 'fixed';
@@ -588,13 +560,11 @@
                 fakeConsole.style.borderRadius = '2px';
                 document.body.appendChild(fakeConsole);
                 setTimeout(() => { fakeConsole.style.opacity = '0'; setTimeout(() => fakeConsole.remove(), 800); }, 1500);
-                // court effet visuel sur le bouton
                 btn.style.transform = 'scale(0.96)';
                 setTimeout(() => { btn.style.transform = ''; }, 120);
             });
         });
 
-        // selecteur objet + validation
         const selectEl = document.getElementById('objectSelect');
         const validateBtn = document.getElementById('validerObjetBtn');
         const feedbackDiv = document.getElementById('selectionFeedback');
@@ -605,22 +575,19 @@
                 feedbackDiv.innerHTML = `✓ OBJET SÉLECTIONNÉ : ${selectedObj.toUpperCase()} // INITIALISATION PROTOCOLE.`;
                 feedbackDiv.style.color = "#e6bd8a";
                 feedbackDiv.style.borderLeftColor = "#c53a1f";
-                // simulation effet diagnostic
                 const diagWarning = document.querySelector('.diag-list li:nth-child(2) .diag-value');
                 if(diagWarning) {
                     diagWarning.style.animation = 'none';
                     setTimeout(() => { if(diagWarning) diagWarning.style.animation = 'pulse 1.2s infinite'; }, 100);
                 }
-                // petit effet secondaire: rappel photo
-                const photoZone = document.querySelector('.photo-image');
-                if(photoZone) {
-                    photoZone.style.filter = 'grayscale(0.5) contrast(1.2) brightness(0.9)';
-                    setTimeout(() => { if(photoZone) photoZone.style.filter = 'grayscale(0.7) contrast(1.1) brightness(0.85)'; }, 500);
+                const photoImg = document.querySelector('.photo-image img');
+                if(photoImg) {
+                    photoImg.style.filter = 'grayscale(0.1) contrast(1.15) brightness(0.85)';
+                    setTimeout(() => { if(photoImg) photoImg.style.filter = 'grayscale(0.2) contrast(1.05) brightness(0.9)'; }, 500);
                 }
             });
         }
 
-        // Horloge simulateur temps réel dans le footer
         function updateClock() {
             const clockSpan = document.querySelector('.terminal-status div:last-child');
             if(clockSpan) {
@@ -634,7 +601,6 @@
         updateClock();
         setInterval(updateClock, 1000);
 
-        // ajouter une petite animation "carte" interactive au clic svg? juste pour ambiance
         const mapSvg = document.querySelector('.map-container svg');
         if(mapSvg) {
             mapSvg.addEventListener('click', (e) => {
@@ -654,7 +620,6 @@
             });
         }
 
-        // effet dégradé photo supplémentaire (interaction simulation)
         const polaroidDiv = document.querySelector('.polaroid-card');
         if(polaroidDiv) {
             polaroidDiv.addEventListener('mouseenter', () => {
