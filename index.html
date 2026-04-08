@@ -1,26 +1,29 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Last Hope // UNIT INTERFACE</title>
+    <title>SR-A // LAST HOPE</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            user-select: none;
         }
 
         body {
-            background: radial-gradient(circle at 20% 30%, #0b0c10, #030405);
             min-height: 100vh;
-            font-family: 'Courier New', 'IBM Plex Mono', 'VT323', monospace;
-            color: #d9d9d9;
-            padding: 2rem 1.5rem;
+            background: radial-gradient(circle at 20% 30%, #0a0c12, #030507);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Share Tech Mono', 'Fira Code', 'Courier New', monospace;
+            padding: 1.5rem;
             position: relative;
+            overflow-x: hidden;
         }
 
+        /* Эффект зернистости */
         body::before {
             content: "";
             position: fixed;
@@ -28,17 +31,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: repeating-linear-gradient(
-                0deg,
-                rgba(0, 0, 0, 0.08) 0px,
-                rgba(0, 0, 0, 0.08) 2px,
-                transparent 2px,
-                transparent 6px
-            );
+            background: repeating-radial-gradient(circle at 20% 30%, rgba(0, 255, 170, 0.02) 0px, rgba(0, 0, 0, 0.2) 2px);
             pointer-events: none;
-            z-index: 10;
+            z-index: 1;
         }
 
+        /* Сетка на фоне */
         body::after {
             content: "";
             position: fixed;
@@ -46,591 +44,569 @@
             left: 0;
             width: 100%;
             height: 100%;
-            box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.6);
+            background-image: 
+                linear-gradient(rgba(0, 255, 170, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 170, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
             pointer-events: none;
-            z-index: 11;
+            z-index: 1;
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
+        /* ОСНОВНОЙ КОНТЕЙНЕР – ЭКРАН ТЕРМИНАЛА */
+        .terminal {
             position: relative;
-            z-index: 2;
+            z-index: 10;
+            max-width: 1100px;
+            width: 100%;
+            background: rgba(8, 12, 18, 0.85);
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(0, 255, 170, 0.4);
+            border-radius: 28px;
+            box-shadow: 0 0 30px rgba(0, 255, 170, 0.15), inset 0 0 15px rgba(0, 255, 170, 0.05);
+            padding: 1.8rem 2rem 2rem 2rem;
+            transition: all 0.3s ease;
         }
 
-        .lstr-header {
-            margin-bottom: 2.5rem;
-            border-left: 4px solid #c53a1f;
-            padding-left: 1.5rem;
+        /* Уголки */
+        .terminal::before,
+        .terminal::after {
+            content: "";
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            border-color: #0fa;
+            border-style: solid;
+            filter: drop-shadow(0 0 4px #0fa);
+        }
+
+        .terminal::before {
+            top: 12px;
+            left: 12px;
+            border-top-width: 2px;
+            border-left-width: 2px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .terminal::after {
+            bottom: 12px;
+            right: 12px;
+            border-bottom-width: 2px;
+            border-right-width: 2px;
+            border-left: none;
+            border-top: none;
+        }
+
+        /* GRID основной структуры */
+        .protocol-grid {
+            display: grid;
+            grid-template-columns: 1fr 0.9fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            align-items: center;
+        }
+
+        /* ЛЕВАЯ ПАНЕЛЬ: USER INFO */
+        .user-panel {
+            background: rgba(0, 20, 15, 0.4);
+            border-left: 3px solid #0fa;
+            padding: 1rem 0 1rem 1.5rem;
             transition: all 0.2s;
         }
 
-        .glitch {
-            font-size: 4.2rem;
-            font-weight: 800;
-            letter-spacing: 6px;
-            color: #e0e0e0;
-            text-shadow: 
-                0.05em 0 0 rgba(197, 58, 31, 0.6),
-                -0.05em -0.025em 0 rgba(30, 150, 150, 0.5);
-            animation: glitch-skew 3s infinite alternate;
-            font-family: monospace;
-            text-transform: uppercase;
-        }
-
-        @keyframes glitch-skew {
-            0% { transform: skew(0deg); text-shadow: 0.05em 0 0 rgba(197, 58, 31, 0.6), -0.05em -0.025em 0 rgba(30, 150, 150, 0.5);}
-            95% { transform: skew(0deg); text-shadow: 0.05em 0 0 rgba(197, 58, 31, 0.6), -0.05em -0.025em 0 rgba(30, 150, 150, 0.5);}
-            100% { transform: skew(-1.5deg); text-shadow: -0.05em 0.03em 0 #c53a1f, 0.07em -0.02em 0 #1e9696;}
-        }
-
-        .unit-badge {
+        .user-label {
             font-size: 0.85rem;
-            color: #b0b0b0;
-            letter-spacing: 2px;
-            margin-top: 0.5rem;
-            display: flex;
-            gap: 2rem;
-            border-top: 1px solid #2a2e3a;
-            padding-top: 0.6rem;
-            width: fit-content;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #6fcf97;
+            margin-bottom: 0.5rem;
         }
 
-        .unit-badge span {
-            color: #c53a1f;
+        .user-name {
+            font-size: 2.2rem;
+            font-weight: 500;
+            color: #ccffdd;
+            text-shadow: 0 0 8px #0fa;
+            word-break: break-word;
+        }
+
+        .user-name span {
+            color: #0fa;
             font-weight: bold;
         }
 
-        .dashboard {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.8rem;
-        }
-
-        .photo-section {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .polaroid-card {
-            background: #121418;
-            border: 1px solid #2c2f3a;
-            padding: 1.2rem 1rem 1.4rem 1rem;
-            box-shadow: 12px 12px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.03);
-            transition: transform 0.2s ease;
-        }
-
-        .photo-frame {
-            background: #1f2129;
-            padding: 12px;
-            border: 1px solid #3a3f4e;
-            margin-bottom: 1.2rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .photo-image {
-            background: #0a0c10;
-            aspect-ratio: 4 / 3;
-            width: 100%;
-            position: relative;
-            background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.2) 0px, rgba(0,0,0,0.2) 2px, transparent 2px, transparent 8px);
-            border: 1px solid #2c2f3a;
+        /* ПРАВАЯ ПАНЕЛЬ: LAST HOPE */
+        .metric-panel {
+            background: rgba(0, 20, 15, 0.3);
+            padding: 1rem 1.5rem;
+            border-right: 3px solid #0fa;
+            text-align: center;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            min-height: 180px;
         }
 
-        /* GIF remplit tout l'espace */
-        .photo-image img {
+        .last-hope-text {
+            font-size: 3.2rem;
+            font-weight: 700;
+            font-family: 'CourierNewPSMT', 'Courier New', 'Courier', monospace;
+            color: #ff3366;
+            text-shadow: 0 0 15px #ff3366, 0 0 30px #ff1144, 0 0 45px #ff3366;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            animation: pulseRedGlow 1.8s infinite alternate;
+            word-break: break-word;
+        }
+
+        @keyframes pulseRedGlow {
+            0% {
+                text-shadow: 0 0 5px #ff3366, 0 0 10px #ff1144;
+                opacity: 0.9;
+            }
+            100% {
+                text-shadow: 0 0 20px #ff6699, 0 0 35px #ff3366, 0 0 50px #ff1144;
+                opacity: 1;
+            }
+        }
+
+        /* СТРОКА ПРОТОКОЛА – динамический блок */
+        .protocol-status {
+            margin: 2rem 0 1.8rem;
+            background: #030b0a70;
+            padding: 1rem 1.5rem;
+            border: 1px dashed #0fa;
+            border-radius: 14px;
+            backdrop-filter: blur(3px);
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* Верхняя строка с кнопкой сканирования */
+        .scan-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* КНОПКА СКАНИРОВАНИЯ */
+        .scan-button {
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Share Tech Mono', 'Fira Code', monospace;
+            background: rgba(10, 40, 30, 0.7);
+            backdrop-filter: blur(4px);
+            padding: 8px 24px;
+            border-radius: 60px;
+            border: 1px solid #0fa;
+            color: #0fa;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 0 8px rgba(0, 255, 170, 0.4);
+            white-space: nowrap;
+        }
+
+        .scan-button:hover:not(:disabled) {
+            background: #0fa22a30;
+            border-color: #ff66aa;
+            color: #ff88cc;
+            box-shadow: 0 0 16px #0fa, 0 0 10px #ff66aa;
+            text-shadow: 0 0 5px #0fa;
+            transform: scale(1.02);
+        }
+
+        .scan-button:active:not(:disabled) {
+            transform: scale(0.98);
+            background: #0fa22a60;
+            transition: 0.05s;
+        }
+
+        .scan-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            filter: grayscale(0.1);
+        }
+
+        /* Прогресс-бар (анимированная линия) */
+        .progress-area {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            filter: grayscale(0.2) contrast(1.05) brightness(0.9);
-            transition: filter 0.4s;
+            display: none;
+            flex-direction: column;
+            gap: 6px;
         }
 
-        /* Effets de dégradation / vieillissement superposés à l'image */
-        .photo-image::before {
-            content: "";
+        .progress-label {
+            font-size: 0.7rem;
+            color: #8fcca5;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .progress-bar-bg {
+            background: #13241f;
+            border-radius: 20px;
+            height: 6px;
+            width: 100%;
+            overflow: hidden;
+            box-shadow: inset 0 0 4px #000;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #0fa, #6fcf97);
+            border-radius: 20px;
+            box-shadow: 0 0 6px #0fa;
+            transition: width 0.1s linear;
+        }
+
+        /* Зона для кнопки КОМПЛЕКС — смещена влево, тёмно-красный цвет */
+        .gamma-area {
+            width: 100%;
+            display: none;
+            justify-content: flex-start;  /* Смещение влево */
+            margin-top: 4px;
+        }
+
+        .gamma-button {
+            font-size: 0.9rem;
+            font-weight: 600;
+            font-family: 'Share Tech Mono', 'Fira Code', monospace;
+            background: rgba(80, 0, 0, 0.85);      /* тёмно-красный фон */
+            backdrop-filter: blur(4px);
+            padding: 8px 20px;
+            border-radius: 40px;
+            border: 1px solid #8b0000;              /* тёмно-красная граница */
+            color: #ffaaaa;                         /* светлый красный текст */
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 6px rgba(139, 0, 0, 0.6);
+        }
+
+        .gamma-button:hover {
+            background: rgba(139, 0, 0, 0.9);
+            border-color: #ff4444;
+            color: #ffcccc;
+            box-shadow: 0 0 12px #8b0000;
+            transform: scale(1.02);
+        }
+
+        .gamma-button:active {
+            transform: scale(0.98);
+        }
+
+        /* НИЖНЯЯ СТРОКА */
+        .footer-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            padding-top: 1.2rem;
+            border-top: 1px solid rgba(0, 255, 170, 0.4);
+        }
+
+        .sys-badge {
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #0fa, #3effb3);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 6px #0fa;
+        }
+
+        .info-tag {
+            font-size: 0.8rem;
+            color: #9befc4;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .info-tag span {
+            border-left: 2px solid #0fa;
+            padding-left: 10px;
+        }
+
+        /* Эффект сканирования */
+        .scan-line {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 30% 40%, rgba(80, 40, 20, 0.25), transparent 70%);
+            background: linear-gradient(to bottom, transparent 0%, rgba(0, 255, 170, 0.05) 50%, transparent 100%);
             pointer-events: none;
-            mix-blend-mode: multiply;
+            animation: scan 6s linear infinite;
             z-index: 2;
+            border-radius: 28px;
         }
 
-        .photo-image::after {
-            content: "";
+        @keyframes scan {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(200%); }
+        }
+
+        /* Адаптивность */
+        @media (max-width: 720px) {
+            .terminal {
+                padding: 1.2rem;
+            }
+            .protocol-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .user-name {
+                font-size: 1.6rem;
+            }
+            .sys-badge {
+                font-size: 1.4rem;
+            }
+            .metric-panel {
+                border-right: none;
+                border-left: 3px solid #0fa;
+                text-align: center;
+            }
+            .user-panel {
+                border-left: 3px solid #0fa;
+            }
+            .last-hope-text {
+                font-size: 2.2rem;
+                letter-spacing: 2px;
+            }
+            .scan-button {
+                font-size: 0.8rem;
+                padding: 6px 18px;
+            }
+            .gamma-button {
+                font-size: 0.75rem;
+                padding: 6px 14px;
+            }
+        }
+
+        /* Декоративный уголок */
+        .hud-corner {
             position: absolute;
-            inset: 0;
-            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.12) 0px, rgba(0,0,0,0.12) 1px, transparent 1px, transparent 3px);
+            bottom: 15px;
+            left: 20px;
+            font-size: 0.65rem;
+            color: #2f8b6b;
+            z-index: 20;
+            font-family: monospace;
+            background: rgba(0,0,0,0.4);
+            padding: 4px 8px;
+            border-radius: 12px;
+            backdrop-filter: blur(4px);
             pointer-events: none;
-            z-index: 3;
-        }
-
-        .photo-caption {
-            font-size: 1.3rem;
-            font-weight: bold;
-            letter-spacing: 2px;
-            margin-bottom: 0.6rem;
-            color: #e6c8a6;
-            border-left: 3px solid #c53a1f;
-            padding-left: 12px;
-        }
-
-        .photo-desc {
-            font-size: 0.9rem;
-            line-height: 1.5;
-            color: #b8b8c8;
-            background: #0f1117;
-            padding: 0.8rem;
-            font-style: italic;
-            border-top: 1px solid #2a2e3c;
-        }
-
-        .right-panels {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            align-content: start;
-        }
-
-        .panel {
-            background: #0f1117ea;
-            backdrop-filter: blur(2px);
-            border: 1px solid #2e3343;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
-            transition: all 0.2s linear;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .panel:hover {
-            border-color: #c53a1f70;
-            box-shadow: 0 0 8px rgba(197, 58, 31, 0.3);
-        }
-
-        .panel-header {
-            background: #1a1d27;
-            padding: 0.7rem 1rem;
-            border-bottom: 1px solid #2c3142;
-            font-weight: bold;
-            letter-spacing: 2px;
-            font-size: 0.95rem;
-            text-transform: uppercase;
-            color: #ddc7a2;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .panel-header::before {
-            content: "▌";
-            color: #c53a1f;
-            font-weight: bold;
-        }
-
-        .panel-content {
-            padding: 1.2rem 1rem;
-            flex: 1;
-        }
-
-        .map-container svg {
-            width: 100%;
-            background: #050608;
-            border-radius: 4px;
-            border: 1px solid #2f3548;
-        }
-
-        .map-legend {
-            font-size: 0.7rem;
-            margin-top: 10px;
-            text-align: center;
-            color: #7f8c8d;
-            letter-spacing: 1px;
-        }
-
-        .diag-list {
-            list-style: none;
-        }
-        .diag-list li {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 14px;
-            font-size: 0.8rem;
-            border-bottom: 1px dotted #2f3542;
-            padding-bottom: 6px;
-        }
-        .diag-label {
-            color: #b5ad8c;
-        }
-        .diag-value {
-            font-family: monospace;
-            font-weight: bold;
-        }
-        .warning {
-            color: #c53a1f;
-            text-shadow: 0 0 3px rgba(197,58,31,0.5);
-            animation: pulse 1.2s infinite;
-        }
-        @keyframes pulse {
-            0% { opacity: 0.6; }
-            100% { opacity: 1; }
-        }
-        .progress-bar {
-            background: #23272f;
-            height: 5px;
-            width: 100%;
-            margin-top: 5px;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            background: #c53a1f;
-            width: 68%;
-            height: 100%;
-            box-shadow: 0 0 4px #c53a1f;
-        }
-
-        .action-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 6px;
-        }
-        .action-btn {
-            background: #1a1e2a;
-            border: 1px solid #434b60;
-            padding: 8px 12px;
-            font-family: monospace;
-            font-weight: bold;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            color: #ddd9ce;
-            cursor: pointer;
-            transition: all 0.1s linear;
-            flex: 1 0 auto;
-            text-align: center;
-            letter-spacing: 1.5px;
-        }
-        .action-btn:hover {
-            background: #c53a1f;
-            border-color: #e08050;
-            color: #0a0b10;
-            box-shadow: 0 0 8px #c53a1f;
-            transform: scale(0.98);
-        }
-
-        .obj-selector {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .custom-select {
-            background: #0f1119;
-            border: 1px solid #3d435b;
-            padding: 8px;
-            font-family: monospace;
-            color: #f2e8cf;
-            font-weight: bold;
-            font-size: 0.85rem;
-            cursor: pointer;
-        }
-        .custom-select option {
-            background: #12141c;
-        }
-        .select-btn {
-            background: #232838;
-            border: 1px solid #5f5f7a;
-            padding: 7px;
-            font-family: monospace;
-            font-weight: bold;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: 0.1s;
-            color: #e6dcc0;
-            text-align: center;
-        }
-        .select-btn:hover {
-            background: #c53a1f;
-            border-color: #ff8c5a;
-            color: black;
-        }
-        .feedback {
-            margin-top: 8px;
-            font-size: 0.7rem;
-            background: #00000066;
-            padding: 6px;
-            text-align: center;
-            color: #bfa87c;
-            border-left: 2px solid #c53a1f;
-        }
-
-        @media (max-width: 860px) {
-            .dashboard {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-            .right-panels {
-                grid-template-columns: 1fr 1fr;
-            }
-            .glitch {
-                font-size: 2.8rem;
-                letter-spacing: 4px;
-            }
-            body {
-                padding: 1rem;
-            }
-        }
-        @media (max-width: 550px) {
-            .right-panels {
-                grid-template-columns: 1fr;
-                gap: 1.2rem;
-            }
-            .action-grid {
-                flex-direction: column;
-            }
-        }
-
-        .terminal-status {
-            margin-top: 3rem;
-            border-top: 1px solid #2c2f3c;
-            padding-top: 1.2rem;
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.7rem;
-            color: #6f788b;
-            font-family: monospace;
-        }
-        button, select {
-            background: none;
-            border: none;
-        }
-        .scanline {
-            width: 100%;
-            height: 2px;
-            background: rgba(197, 58, 31, 0.3);
-            margin: 0.5rem 0;
         }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Major+Mono+Display&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<div class="container">
-    <div class="lstr-header">
-        <div class="glitch">LAST HOPE</div>
-        <div class="unit-badge">
-            <span>◆ UNIT: ELSTER-512</span>
-            <span>PENROSE · 218 · SIGNATURE</span>
+<div class="terminal">
+    <div class="scan-line"></div>
+
+    <div class="protocol-grid">
+        <div class="user-panel">
+            <div class="user-label">// идентификация</div>
+            <div class="user-name">
+                USER: <span>UNKNOWN</span>
+            </div>
+        </div>
+        <div class="metric-panel">
+            <div class="last-hope-text">LAST HOPE</div>
         </div>
     </div>
 
-    <div class="dashboard">
-        <!-- colonne gauche PHOTOGRAPHIE avec GIF -->
-        <div class="photo-section">
-            <div class="polaroid-card">
-                <div class="photo-frame">
-                    <div class="photo-image">
-                        <!-- GIF remplaçant le bloc texte "Ariane Yeong" -->
-                        <img src="https://i.pinimg.com/originals/9d/e5/6b/9de56bdc4fff3249bd492c2247c5db82.gif" 
-                             alt="Ariane Yeong - mémoire dégradée">
-                    </div>
-                </div>
-                <div class="photo-caption">PHOTOGRAPHIE</div>
-                <div class="photo-desc">
-                    Une photographie prise sur un tirage à développement instantané. Malgré la dégradation, on peut encore voir Ariane Yeong dessus.
-                </div>
-                <div class="scanline"></div>
-                <div style="font-size: 0.7rem; text-align: right; margin-top: 8px; color:#6c6f82;">tirage · instax · archivage LAST HOPE</div>
+    <!-- Блок протокола: кнопка сканирования + динамические зоны -->
+    <div class="protocol-status" id="protocolStatus">
+        <div class="scan-row">
+            <button class="scan-button" id="scanBtn">[Сканировать]</button>
+        </div>
+        <!-- Зона для анимированной линии загрузки -->
+        <div class="progress-area" id="progressArea">
+            <div class="progress-label">⟳ АНАЛИЗ СИСТЕМЫ ⟳</div>
+            <div class="progress-bar-bg">
+                <div class="progress-fill" id="progressFill"></div>
             </div>
         </div>
-
-        <!-- colonne droite : 4 modules -->
-        <div class="right-panels">
-            <!-- CARTE -->
-            <div class="panel">
-                <div class="panel-header">CARTE · SECTEUR 7</div>
-                <div class="panel-content">
-                    <div class="map-container">
-                        <svg viewBox="0 0 180 130" xmlns="http://www.w3.org/2000/svg" style="background:#07090e;">
-                            <rect x="10" y="15" width="45" height="35" fill="none" stroke="#a55a3a" stroke-width="1.2" stroke-dasharray="2 2"/>
-                            <rect x="70" y="15" width="45" height="35" fill="none" stroke="#b46a48" stroke-width="1.2"/>
-                            <rect x="130" y="15" width="38" height="35" fill="none" stroke="#7e5d47" stroke-width="1"/>
-                            <circle cx="92" cy="33" r="4" fill="#c53a1f" stroke="none" opacity="0.8"/>
-                            <path d="M32 50 L32 85 L65 85" stroke="#6c6356" stroke-width="1" fill="none"/>
-                            <path d="M92 50 L92 80 L130 80" stroke="#6c6356" stroke-width="1" fill="none"/>
-                            <rect x="15" y="90" width="50" height="25" fill="#141824" stroke="#635d4e" stroke-width="0.8"/>
-                            <text x="20" y="105" fill="#af947a" font-size="6">⚙️ Salle Rituel</text>
-                            <text x="130" y="110" fill="#9c8266" font-size="5">Archives</text>
-                            <line x1="100" y1="15" x2="100" y2="10" stroke="#b5764e" stroke-width="1"/>
-                            <text x="108" y="12" fill="#b5764e" font-size="5">LAST HOPE</text>
-                        </svg>
-                        <div class="map-legend">▲ POSITION ACTUELLE | ZONE D'OPÉRATION</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- DIAGNOSTICS -->
-            <div class="panel">
-                <div class="panel-header">DIAGNOSTICS</div>
-                <div class="panel-content">
-                    <ul class="diag-list">
-                        <li><span class="diag-label">NEURAL BRIDGE</span><span class="diag-value">87%</span></li>
-                        <li><span class="diag-label">MEMORY INTEGRITY</span><span class="diag-value warning">CORRUPTION DÉTECTÉE</span></li>
-                        <li><span class="diag-label">PERSONALITY DRIFT</span><span class="diag-value warning">CRITIQUE</span></li>
-                        <li><span class="diag-label">BIO-RÉSONANCE</span><span class="diag-value">instable <span style="color:#e68a4a;">∿</span></span></li>
-                    </ul>
-                    <div class="progress-bar"><div class="progress-fill" style="width: 44%;"></div></div>
-                    <div style="display: flex; justify-content: space-between; margin-top: 12px; font-size:0.7rem;">
-                        <span>✔️ UNITÉ FONCTIONNELLE</span>
-                        <span style="color:#c53a1f;">⚠️ ALERTE MNEMOS</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- MENU ACTIONS -->
-            <div class="panel">
-                <div class="panel-header">MENU ACTIONS</div>
-                <div class="panel-content">
-                    <div class="action-grid">
-                        <button class="action-btn" data-action="examiner">EXAMINER</button>
-                        <button class="action-btn" data-action="parler">PARLER</button>
-                        <button class="action-btn" data-action="utiliser">UTILISER</button>
-                        <button class="action-btn" data-action="combiner">COMBINER</button>
-                        <button class="action-btn" data-action="analyser">ANALYSER</button>
-                    </div>
-                    <div class="scanline" style="margin: 12px 0 6px 0;"></div>
-                    <div style="font-size: 0.7rem; color:#928d78; text-align:center;">séquence disponible → interface opérationnelle</div>
-                </div>
-            </div>
-
-            <!-- SELECTIONNER OBJET -->
-            <div class="panel">
-                <div class="panel-header">SELECTIONNER OBJET</div>
-                <div class="panel-content">
-                    <div class="obj-selector">
-                        <select id="objectSelect" class="custom-select">
-                            <option value="Médailon brisé">Médailon brisé</option>
-                            <option value="Lettre non scellée">Lettre non scellée</option>
-                            <option value="Module mémoire">Module mémoire (dégradé)</option>
-                            <option value="Cassette audio">Cassette audio — dernière voix</option>
-                            <option value="Fragment de photo">Fragment de photo (Ariane)</option>
-                        </select>
-                        <button id="validerObjetBtn" class="select-btn">VALIDER LA SÉLECTION</button>
-                        <div id="selectionFeedback" class="feedback">aucun objet sélectionné</div>
-                    </div>
-                </div>
-            </div>
+        <!-- Зона для кнопки "КОМПЛЕКС" (сдвинута влево, тёмно-красная) -->
+        <div class="gamma-area" id="gammaArea">
+            <button class="gamma-button" id="gammaBtn">[КОМПЛЕКС]</button>
         </div>
     </div>
 
-    <div class="terminal-status">
-        <div>⚡ LAST HOPE // UNITÉ DE TRAITEMENT MNÉMONIQUE</div>
-        <div>⏣ DIAGNOSTIC : MODE OPÉRATIONNEL DÉGRADÉ</div>
-        <div>⏲ 04:07:22 [UTC]</div>
+    <div class="footer-status">
+        <div class="sys-badge">
+            ⚙️ SR-A
+        </div>
+        <div class="info-tag">
+            <span>PROTOCOL: v.82.0_alpha</span>
+            <span>ENCRYPT: ACTIVE</span>
+            <span id="uptimeDisplay">UPTIME: 00:00:00</span>
+        </div>
+    </div>
+
+    <div class="hud-corner">
+        [ SECURE TERMINAL | SYS_ID: SR-A | LAST HOPE ]
     </div>
 </div>
 
 <script>
     (function() {
-        const actionBtns = document.querySelectorAll('.action-btn');
-        actionBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const action = btn.getAttribute('data-action') || btn.innerText.trim();
-                const fakeConsole = document.createElement('div');
-                fakeConsole.innerText = `⌘ ACTION: ${action.toUpperCase()} — tentative... signal reçu.`;
-                fakeConsole.style.position = 'fixed';
-                fakeConsole.style.bottom = '20px';
-                fakeConsole.style.right = '20px';
-                fakeConsole.style.backgroundColor = '#0b0e16';
-                fakeConsole.style.borderLeft = '3px solid #c53a1f';
-                fakeConsole.style.padding = '8px 14px';
-                fakeConsole.style.fontSize = '0.75rem';
-                fakeConsole.style.fontFamily = 'monospace';
-                fakeConsole.style.zIndex = '999';
-                fakeConsole.style.color = '#dacaa4';
-                fakeConsole.style.boxShadow = '0 0 12px black';
-                fakeConsole.style.borderRadius = '2px';
-                document.body.appendChild(fakeConsole);
-                setTimeout(() => { fakeConsole.style.opacity = '0'; setTimeout(() => fakeConsole.remove(), 800); }, 1500);
-                btn.style.transform = 'scale(0.96)';
-                setTimeout(() => { btn.style.transform = ''; }, 120);
-            });
-        });
+        // Элементы
+        const scanBtn = document.getElementById('scanBtn');
+        const progressArea = document.getElementById('progressArea');
+        const progressFill = document.getElementById('progressFill');
+        const gammaArea = document.getElementById('gammaArea');
+        const gammaBtn = document.getElementById('gammaBtn');
+        const protocolStatus = document.getElementById('protocolStatus');
+        const lastHopeElement = document.querySelector('.last-hope-text');
 
-        const selectEl = document.getElementById('objectSelect');
-        const validateBtn = document.getElementById('validerObjetBtn');
-        const feedbackDiv = document.getElementById('selectionFeedback');
+        let scanning = false;
+        let animationFrame = null;
+        let startTime = 0;
+        const animDuration = 2000; // 2 секунды
 
-        if(validateBtn && selectEl && feedbackDiv) {
-            validateBtn.addEventListener('click', () => {
-                const selectedObj = selectEl.options[selectEl.selectedIndex]?.text || "objet inconnu";
-                feedbackDiv.innerHTML = `✓ OBJET SÉLECTIONNÉ : ${selectedObj.toUpperCase()} // INITIALISATION PROTOCOLE.`;
-                feedbackDiv.style.color = "#e6bd8a";
-                feedbackDiv.style.borderLeftColor = "#c53a1f";
-                const diagWarning = document.querySelector('.diag-list li:nth-child(2) .diag-value');
-                if(diagWarning) {
-                    diagWarning.style.animation = 'none';
-                    setTimeout(() => { if(diagWarning) diagWarning.style.animation = 'pulse 1.2s infinite'; }, 100);
-                }
-                const photoImg = document.querySelector('.photo-image img');
-                if(photoImg) {
-                    photoImg.style.filter = 'grayscale(0.1) contrast(1.15) brightness(0.85)';
-                    setTimeout(() => { if(photoImg) photoImg.style.filter = 'grayscale(0.2) contrast(1.05) brightness(0.9)'; }, 500);
-                }
-            });
-        }
-
-        function updateClock() {
-            const clockSpan = document.querySelector('.terminal-status div:last-child');
-            if(clockSpan) {
-                const now = new Date();
-                const hours = now.getUTCHours().toString().padStart(2,'0');
-                const minutes = now.getUTCMinutes().toString().padStart(2,'0');
-                const seconds = now.getUTCSeconds().toString().padStart(2,'0');
-                clockSpan.innerHTML = `⏲ ${hours}:${minutes}:${seconds} [UTC]`;
+        // Функция сброса состояния (убираем гамму, прячем прогресс, останавливаем анимацию)
+        function resetScanState(resetButton = true) {
+            if (animationFrame) {
+                cancelAnimationFrame(animationFrame);
+                animationFrame = null;
+            }
+            scanning = false;
+            progressArea.style.display = 'none';
+            gammaArea.style.display = 'none';
+            progressFill.style.width = '0%';
+            if (resetButton) {
+                scanBtn.disabled = false;
+                scanBtn.textContent = '[Сканировать]';
             }
         }
-        updateClock();
-        setInterval(updateClock, 1000);
 
-        const mapSvg = document.querySelector('.map-container svg');
-        if(mapSvg) {
-            mapSvg.addEventListener('click', (e) => {
-                const fakeMsg = document.createElement('div');
-                fakeMsg.innerText = `📡 CARTE ANALYSÉE : CORRIDOR PRINCIPAL // ZONE D'IMPACT`;
-                fakeMsg.style.position = 'fixed';
-                fakeMsg.style.bottom = '70px';
-                fakeMsg.style.left = '20px';
-                fakeMsg.style.background = '#11141ecc';
-                fakeMsg.style.padding = '5px 12px';
-                fakeMsg.style.fontSize = '0.7rem';
-                fakeMsg.style.border = '1px solid #c53a1f';
-                fakeMsg.style.backdropFilter = 'blur(4px)';
-                fakeMsg.style.zIndex = '1000';
-                document.body.appendChild(fakeMsg);
-                setTimeout(() => fakeMsg.remove(), 1400);
+        // Функция для плавной анимации прогресса
+        function startProgressAnimation() {
+            return new Promise((resolve) => {
+                startTime = performance.now();
+                progressFill.style.width = '0%';
+                
+                function update(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    let percent = Math.min(1, elapsed / animDuration);
+                    const widthPercent = percent * 100;
+                    progressFill.style.width = `${widthPercent}%`;
+                    
+                    if (percent < 1) {
+                        animationFrame = requestAnimationFrame(update);
+                    } else {
+                        animationFrame = null;
+                        resolve();
+                    }
+                }
+                animationFrame = requestAnimationFrame(update);
             });
         }
 
-        const polaroidDiv = document.querySelector('.polaroid-card');
-        if(polaroidDiv) {
-            polaroidDiv.addEventListener('mouseenter', () => {
-                const photoDesc = document.querySelector('.photo-desc');
-                if(photoDesc) photoDesc.style.backgroundColor = '#181c26';
-            });
-            polaroidDiv.addEventListener('mouseleave', () => {
-                const photoDesc = document.querySelector('.photo-desc');
-                if(photoDesc) photoDesc.style.backgroundColor = '#0f1117';
+        // Обработчик клика по кнопке Сканировать
+        async function onScanClick() {
+            if (scanning) return;
+            
+            resetScanState(true);
+            
+            scanning = true;
+            scanBtn.disabled = true;
+            scanBtn.textContent = '[СКАНИРОВАНИЕ...]';
+            
+            progressArea.style.display = 'flex';
+            gammaArea.style.display = 'none';
+            
+            await new Promise(r => setTimeout(r, 30));
+            await startProgressAnimation();
+            
+            progressArea.style.display = 'none';
+            gammaArea.style.display = 'flex';
+            
+            protocolStatus.style.borderColor = '#ff66aa';
+            protocolStatus.style.boxShadow = '0 0 12px rgba(255, 102, 170, 0.3)';
+            setTimeout(() => {
+                protocolStatus.style.borderColor = '';
+                protocolStatus.style.boxShadow = '';
+            }, 600);
+            
+            if (lastHopeElement) {
+                lastHopeElement.style.textShadow = '0 0 25px #ff6699, 0 0 45px #ff3366';
+                setTimeout(() => {
+                    lastHopeElement.style.textShadow = '';
+                }, 400);
+            }
+            
+            scanning = false;
+            scanBtn.disabled = false;
+            scanBtn.textContent = '[Сканировать]';
+            
+            console.log(`[СКАНИРОВАНИЕ ЗАВЕРШЕНО] ${new Date().toLocaleTimeString()} — КОМПЛЕКС готов`);
+        }
+        
+        // Обработчик для кнопки КОМПЛЕКС — переход на gamma protocol.html
+        if (gammaBtn) {
+            gammaBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                console.log(`[КОМПЛЕКС] Переход на gamma protocol.html в ${new Date().toLocaleTimeString()}`);
+                if (lastHopeElement) {
+                    lastHopeElement.style.animation = 'none';
+                    lastHopeElement.style.textShadow = '0 0 35px #ff00aa, 0 0 60px #ff3366';
+                    setTimeout(() => {
+                        lastHopeElement.style.animation = 'pulseRedGlow 1.8s infinite alternate';
+                    }, 200);
+                }
+                setTimeout(() => {
+                    window.location.href = "gamma protocol.html";
+                }, 150);
             });
         }
+        
+        if (scanBtn) {
+            scanBtn.addEventListener('click', onScanClick);
+        }
+        
+        // Счётчик Uptime
+        const startTimeUptime = Date.now();
+        const uptimeElement = document.getElementById('uptimeDisplay');
+        
+        function updateUptime() {
+            if (!uptimeElement) return;
+            const elapsed = Math.floor((Date.now() - startTimeUptime) / 1000);
+            const hours = Math.floor(elapsed / 3600);
+            const minutes = Math.floor((elapsed % 3600) / 60);
+            const seconds = elapsed % 60;
+            uptimeElement.textContent = `UPTIME: ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        updateUptime();
+        setInterval(updateUptime, 1000);
+        
+        // Динамический заголовок
+        const originalTitle = "SR-A // LAST HOPE";
+        document.title = originalTitle;
+        setInterval(() => {
+            if (Math.random() > 0.88) {
+                document.title = "> " + originalTitle + " _";
+                setTimeout(() => { document.title = originalTitle; }, 400);
+            }
+        }, 4000);
+        
+        console.log("%c[SR-A] СИСТЕМА АКТИВНА // LAST HOPE", "color: #ff3366; font-family: monospace; font-size: 12px");
+        console.log("%c[USER: UNKNOWN]  |  SR-A ONLINE // LAST HOPE", "color: #6fcf97; font-family: monospace;");
+        console.log("%c[ИНСТРУКЦИЯ] Нажмите [Сканировать] → анимация → появление кнопки [КОМПЛЕКС] (слева, тёмно-красная). Она ведёт на gamma protocol.html", "color: #88ffaa");
     })();
 </script>
 </body>
