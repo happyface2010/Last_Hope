@@ -265,36 +265,68 @@
             transition: width 0.1s linear;
         }
 
-        /* Зона для кнопки СТАЛКЕР — смещена влево, тёмно-красный цвет */
+        /* Общая рамка для картинки и кнопки (единый блок) */
         .gamma-area {
             width: 100%;
             display: none;
-            justify-content: flex-start;
-            margin-top: 4px;
+            justify-content: center;
+            margin-top: 8px;
         }
 
-        .gamma-button {
-            font-size: 0.9rem;
-            font-weight: 600;
-            font-family: 'Share Tech Mono', 'Fira Code', monospace;
-            background: rgba(80, 0, 0, 0.85);
+        .unified-frame {
+            background: rgba(0, 0, 0, 0.65);
+            border: 2px solid #8b0000;
+            border-radius: 24px;
+            padding: 20px 20px 20px 20px;
+            box-shadow: 0 0 20px rgba(139, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+            width: 100%;
+            max-width: 360px;
             backdrop-filter: blur(4px);
-            padding: 8px 20px;
-            border-radius: 40px;
-            border: 1px solid #8b0000;
-            color: #ffaaaa;
+            transition: all 0.2s;
+        }
+
+        /* Стиль изображения внутри общей рамки */
+        .stalker-image {
+            max-width: 100%;
+            width: 280px;
+            height: auto;
+            border-radius: 16px;
+            display: block;
+            border: 1px solid #b00030;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+            transition: 0.2s;
+        }
+
+        /* Расширенная кнопка СТАЛКЕР */
+        .gamma-button {
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: 'Share Tech Mono', 'Fira Code', monospace;
+            background: rgba(80, 0, 0, 0.9);
+            backdrop-filter: blur(4px);
+            padding: 12px 28px;
+            min-width: 200px;
+            width: auto;
+            border-radius: 60px;
+            border: 1px solid #cc3355;
+            color: #ffcccc;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 0 6px rgba(139, 0, 0, 0.6);
+            box-shadow: 0 0 8px rgba(139, 0, 0, 0.7);
+            text-align: center;
         }
 
         .gamma-button:hover {
-            background: rgba(139, 0, 0, 0.9);
-            border-color: #ff4444;
-            color: #ffcccc;
-            box-shadow: 0 0 12px #8b0000;
+            background: rgba(139, 0, 0, 1);
+            border-color: #ff8888;
+            color: #ffffff;
+            box-shadow: 0 0 16px #8b0000;
             transform: scale(1.02);
         }
 
@@ -389,8 +421,16 @@
                 padding: 6px 18px;
             }
             .gamma-button {
-                font-size: 0.75rem;
-                padding: 6px 14px;
+                font-size: 0.9rem;
+                padding: 10px 20px;
+                min-width: 160px;
+            }
+            .unified-frame {
+                padding: 15px;
+                max-width: 280px;
+            }
+            .stalker-image {
+                width: 240px;
             }
         }
 
@@ -441,9 +481,12 @@
                 <div class="progress-fill" id="progressFill"></div>
             </div>
         </div>
-        <!-- Зона для кнопки "СТАЛКЕР" (сдвинута влево, тёмно-красная) -->
+        <!-- Общая рамка для картинки и кнопки (появляется после сканирования) -->
         <div class="gamma-area" id="gammaArea">
-            <button class="gamma-button" id="gammaBtn">[Сталкер]</button>
+            <div class="unified-frame">
+                <img class="stalker-image" src="https://i.pinimg.com/736x/5e/31/46/5e31468544b0f7bfbbec6308289d0ff4.jpg" alt="Stalker image">
+                <button class="gamma-button" id="gammaBtn">[Сталкер]</button>
+            </div>
         </div>
     </div>
 
@@ -479,7 +522,7 @@
         let startTime = 0;
         const animDuration = 2000; // 2 секунды
 
-        // Функция сброса состояния (убираем гамму, прячем прогресс, останавливаем анимацию)
+        // Функция сброса состояния (убираем общую рамку, прячем прогресс, останавливаем анимацию)
         function resetScanState(resetButton = true) {
             if (animationFrame) {
                 cancelAnimationFrame(animationFrame);
@@ -535,7 +578,7 @@
             await startProgressAnimation();
             
             progressArea.style.display = 'none';
-            gammaArea.style.display = 'flex';
+            gammaArea.style.display = 'flex';   // Показываем общую рамку с фото и кнопкой
             
             protocolStatus.style.borderColor = '#ff66aa';
             protocolStatus.style.boxShadow = '0 0 12px rgba(255, 102, 170, 0.3)';
@@ -545,7 +588,6 @@
             }, 600);
             
             if (archiveElement) {
-                // Временный эффект — малиновое свечение
                 archiveElement.style.textShadow = '0 0 25px #f06292, 0 0 45px #d81b60';
                 setTimeout(() => {
                     archiveElement.style.textShadow = '';
@@ -556,7 +598,7 @@
             scanBtn.disabled = false;
             scanBtn.textContent = '[Сканировать]';
             
-            console.log(`[СКАНИРОВАНИЕ ЗАВЕРШЕНО] ${new Date().toLocaleTimeString()} — Кнопка [Сталкер] готова`);
+            console.log(`[СКАНИРОВАНИЕ ЗАВЕРШЕНО] ${new Date().toLocaleTimeString()} — Общая рамка с фото и кнопкой [Сталкер] активна`);
         }
         
         // Обработчик для кнопки СТАЛКЕР — переход на Stalker.html
@@ -608,7 +650,7 @@
         
         console.log("%c[SR-A] СИСТЕМА АКТИВНА // STALKER ARCHIVE", "color: #d81b60; font-family: monospace; font-size: 12px");
         console.log("%c[USER: UNKNOWN]  |  SR-A ONLINE // STALKER ARCHIVE", "color: #6fcf97; font-family: monospace;");
-        console.log("%c[ИНСТРУКЦИЯ] Нажмите [Сканировать] → анимация → появление кнопки [Сталкер]. Она ведёт на Stalker.html", "color: #88ffaa");
+        console.log("%c[ИНСТРУКЦИЯ] Нажмите [Сканировать] → анимация. После завершения появится общая рамка: фото + расширенная кнопка [Сталкер].", "color: #88ffaa");
     })();
 </script>
 </body>
