@@ -275,7 +275,7 @@
             margin-top: 8px;
         }
 
-        /* Единая рамка для каждого из двух блоков */
+        /* Единая рамка для каждого блока */
         .unified-frame {
             background: rgba(0, 0, 0, 0.65);
             border: 2px solid #8b0000;
@@ -287,24 +287,25 @@
             align-items: center;
             gap: 18px;
             width: 100%;
-            max-width: 300px;
+            max-width: 280px;
             backdrop-filter: blur(4px);
             transition: all 0.2s;
         }
 
-        /* Стиль изображения внутри рамки */
+        /* Стиль изображения внутри рамки — одинаковый размер */
         .frame-image {
+            width: 220px;
             max-width: 100%;
-            width: 250px;
             height: auto;
             border-radius: 16px;
             display: block;
             border: 1px solid #b00030;
             box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
             transition: 0.2s;
+            object-fit: contain;
         }
 
-        /* Кнопки внутри рамок (единый стиль) */
+        /* Кнопки внутри рамок */
         .frame-button {
             font-size: 1rem;
             font-weight: 700;
@@ -312,7 +313,7 @@
             background: rgba(80, 0, 0, 0.9);
             backdrop-filter: blur(4px);
             padding: 10px 24px;
-            min-width: 160px;
+            min-width: 140px;
             width: auto;
             border-radius: 60px;
             border: 1px solid #cc3355;
@@ -426,14 +427,14 @@
             .frame-button {
                 font-size: 0.85rem;
                 padding: 8px 16px;
-                min-width: 130px;
+                min-width: 120px;
             }
             .unified-frame {
                 max-width: 260px;
                 padding: 15px;
             }
             .frame-image {
-                width: 220px;
+                width: 200px;
             }
         }
 
@@ -486,14 +487,14 @@
         </div>
         <!-- Контейнер для двух окон (появляется после сканирования) -->
         <div class="double-gamma" id="doubleGamma">
-            <!-- Левое окно: Трой -->
+            <!-- Левое окно: Трой (новая картинка) -->
             <div class="unified-frame" id="frameTroy">
-                <img class="frame-image" src="https://i.pinimg.com/736x/7e/75/8c/7e758ce7fc16d36a55ac7c6986ed21fe.jpg" alt="Troy image">
+                <img class="frame-image" src="https://i.pinimg.com/736x/4b/18/54/4b185430de503eb4ea4f9ed42826385b.jpg" alt="Troy image">
                 <button class="frame-button" id="troyBtn">[Трой]</button>
             </div>
-            <!-- Правое окно: Сталкер -->
+            <!-- Правое окно: Сталкер (новая картинка) -->
             <div class="unified-frame" id="frameStalker">
-                <img class="frame-image" src="https://i.pinimg.com/736x/5e/31/46/5e31468544b0f7bfbbec6308289d0ff4.jpg" alt="Stalker image">
+                <img class="frame-image" src="https://i.pinimg.com/736x/f2/9f/16/f29f16c1d9ff46456f327f3a18abdc89.jpg" alt="Stalker image">
                 <button class="frame-button" id="stalkerBtn">[Сталкер]</button>
             </div>
         </div>
@@ -588,7 +589,7 @@
             await startProgressAnimation();
             
             progressArea.style.display = 'none';
-            doubleGamma.style.display = 'flex';   // Показываем два окна: Трой и Сталкер
+            doubleGamma.style.display = 'flex';
             
             protocolStatus.style.borderColor = '#ff66aa';
             protocolStatus.style.boxShadow = '0 0 12px rgba(255, 102, 170, 0.3)';
@@ -608,7 +609,7 @@
             scanBtn.disabled = false;
             scanBtn.textContent = '[Сканировать]';
             
-            console.log(`[СКАНИРОВАНИЕ ЗАВЕРШЕНО] ${new Date().toLocaleTimeString()} — Появились два окна: Трой (слева) и Сталкер (справа)`);
+            console.log(`[СКАНИРОВАНИЕ ЗАВЕРШЕНО] ${new Date().toLocaleTimeString()} — Появились два окна: Трой и Сталкер (картинки обновлены)`);
         }
         
         // Обработчик для кнопки ТРОЙ — переход на Troy.html
@@ -676,9 +677,9 @@
             }
         }, 4000);
         
-        console.log("%c[SR-A] СИСТЕМА АКТИВНА // STALKER ARCHIVE", "color: #d81b60; font-family: monospace; font-size: 12px");
+        console.log("%c[SR-A] СИСТЕМА АКТИВНА // STALKER ARCHIVE (новые изображения)", "color: #d81b60; font-family: monospace; font-size: 12px");
         console.log("%c[USER: UNKNOWN]  |  SR-A ONLINE // STALKER ARCHIVE", "color: #6fcf97; font-family: monospace;");
-        console.log("%c[ИНСТРУКЦИЯ] Нажмите [Сканировать] → анимация. После завершения появятся два окна: [Трой] (слева, картинка по новому URL) и [Сталкер] (справа).", "color: #88ffaa");
+        console.log("%c[ИНСТРУКЦИЯ] Нажмите [Сканировать] → анимация → появятся два окна с обновлёнными картинками.", "color: #88ffaa");
     })();
 </script>
 </body>
