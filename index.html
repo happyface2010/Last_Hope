@@ -265,14 +265,17 @@
             transition: width 0.1s linear;
         }
 
-        /* Общая рамка для картинки и кнопки (единый блок) */
-        .gamma-area {
+        /* Контейнер для двух окон (флекс-строка) */
+        .double-gamma {
             width: 100%;
             display: none;
             justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
             margin-top: 8px;
         }
 
+        /* Единая рамка для каждого из двух блоков */
         .unified-frame {
             background: rgba(0, 0, 0, 0.65);
             border: 2px solid #8b0000;
@@ -284,15 +287,15 @@
             align-items: center;
             gap: 18px;
             width: 100%;
-            max-width: 360px;
+            max-width: 300px;
             backdrop-filter: blur(4px);
             transition: all 0.2s;
         }
 
-        /* Стиль изображения внутри общей рамки */
-        .stalker-image {
+        /* Стиль изображения внутри рамки */
+        .frame-image {
             max-width: 100%;
-            width: 280px;
+            width: 250px;
             height: auto;
             border-radius: 16px;
             display: block;
@@ -301,15 +304,15 @@
             transition: 0.2s;
         }
 
-        /* Расширенная кнопка СТАЛКЕР */
-        .gamma-button {
-            font-size: 1.1rem;
+        /* Кнопки внутри рамок (единый стиль) */
+        .frame-button {
+            font-size: 1rem;
             font-weight: 700;
             font-family: 'Share Tech Mono', 'Fira Code', monospace;
             background: rgba(80, 0, 0, 0.9);
             backdrop-filter: blur(4px);
-            padding: 12px 28px;
-            min-width: 200px;
+            padding: 10px 24px;
+            min-width: 160px;
             width: auto;
             border-radius: 60px;
             border: 1px solid #cc3355;
@@ -322,7 +325,7 @@
             text-align: center;
         }
 
-        .gamma-button:hover {
+        .frame-button:hover {
             background: rgba(139, 0, 0, 1);
             border-color: #ff8888;
             color: #ffffff;
@@ -330,7 +333,7 @@
             transform: scale(1.02);
         }
 
-        .gamma-button:active {
+        .frame-button:active {
             transform: scale(0.98);
         }
 
@@ -390,7 +393,7 @@
         }
 
         /* Адаптивность */
-        @media (max-width: 720px) {
+        @media (max-width: 760px) {
             .terminal {
                 padding: 1.2rem;
             }
@@ -420,17 +423,17 @@
                 font-size: 0.8rem;
                 padding: 6px 18px;
             }
-            .gamma-button {
-                font-size: 0.9rem;
-                padding: 10px 20px;
-                min-width: 160px;
+            .frame-button {
+                font-size: 0.85rem;
+                padding: 8px 16px;
+                min-width: 130px;
             }
             .unified-frame {
+                max-width: 260px;
                 padding: 15px;
-                max-width: 280px;
             }
-            .stalker-image {
-                width: 240px;
+            .frame-image {
+                width: 220px;
             }
         }
 
@@ -481,11 +484,17 @@
                 <div class="progress-fill" id="progressFill"></div>
             </div>
         </div>
-        <!-- Общая рамка для картинки и кнопки (появляется после сканирования) -->
-        <div class="gamma-area" id="gammaArea">
-            <div class="unified-frame">
-                <img class="stalker-image" src="https://i.pinimg.com/736x/5e/31/46/5e31468544b0f7bfbbec6308289d0ff4.jpg" alt="Stalker image">
-                <button class="gamma-button" id="gammaBtn">[Сталкер]</button>
+        <!-- Контейнер для двух окон (появляется после сканирования) -->
+        <div class="double-gamma" id="doubleGamma">
+            <!-- Левое окно: Трой -->
+            <div class="unified-frame" id="frameTroy">
+                <img class="frame-image" src="https://i.pinimg.com/736x/7e/75/8c/7e758ce7fc16d36a55ac7c6986ed21fe.jpg" alt="Troy image">
+                <button class="frame-button" id="troyBtn">[Трой]</button>
+            </div>
+            <!-- Правое окно: Сталкер -->
+            <div class="unified-frame" id="frameStalker">
+                <img class="frame-image" src="https://i.pinimg.com/736x/5e/31/46/5e31468544b0f7bfbbec6308289d0ff4.jpg" alt="Stalker image">
+                <button class="frame-button" id="stalkerBtn">[Сталкер]</button>
             </div>
         </div>
     </div>
@@ -512,8 +521,9 @@
         const scanBtn = document.getElementById('scanBtn');
         const progressArea = document.getElementById('progressArea');
         const progressFill = document.getElementById('progressFill');
-        const gammaArea = document.getElementById('gammaArea');
-        const gammaBtn = document.getElementById('gammaBtn');
+        const doubleGamma = document.getElementById('doubleGamma');
+        const troyBtn = document.getElementById('troyBtn');
+        const stalkerBtn = document.getElementById('stalkerBtn');
         const protocolStatus = document.getElementById('protocolStatus');
         const archiveElement = document.querySelector('.archive-text');
 
@@ -522,7 +532,7 @@
         let startTime = 0;
         const animDuration = 2000; // 2 секунды
 
-        // Функция сброса состояния (убираем общую рамку, прячем прогресс, останавливаем анимацию)
+        // Функция сброса состояния (прячем оба окна, прогресс)
         function resetScanState(resetButton = true) {
             if (animationFrame) {
                 cancelAnimationFrame(animationFrame);
@@ -530,7 +540,7 @@
             }
             scanning = false;
             progressArea.style.display = 'none';
-            gammaArea.style.display = 'none';
+            doubleGamma.style.display = 'none';
             progressFill.style.width = '0%';
             if (resetButton) {
                 scanBtn.disabled = false;
@@ -572,13 +582,13 @@
             scanBtn.textContent = '[СКАНИРОВАНИЕ...]';
             
             progressArea.style.display = 'flex';
-            gammaArea.style.display = 'none';
+            doubleGamma.style.display = 'none';
             
             await new Promise(r => setTimeout(r, 30));
             await startProgressAnimation();
             
             progressArea.style.display = 'none';
-            gammaArea.style.display = 'flex';   // Показываем общую рамку с фото и кнопкой
+            doubleGamma.style.display = 'flex';   // Показываем два окна: Трой и Сталкер
             
             protocolStatus.style.borderColor = '#ff66aa';
             protocolStatus.style.boxShadow = '0 0 12px rgba(255, 102, 170, 0.3)';
@@ -598,12 +608,30 @@
             scanBtn.disabled = false;
             scanBtn.textContent = '[Сканировать]';
             
-            console.log(`[СКАНИРОВАНИЕ ЗАВЕРШЕНО] ${new Date().toLocaleTimeString()} — Общая рамка с фото и кнопкой [Сталкер] активна`);
+            console.log(`[СКАНИРОВАНИЕ ЗАВЕРШЕНО] ${new Date().toLocaleTimeString()} — Появились два окна: Трой (слева) и Сталкер (справа)`);
         }
         
+        // Обработчик для кнопки ТРОЙ — переход на Troy.html
+        if (troyBtn) {
+            troyBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                console.log(`[ТРОЙ] Переход на Troy.html в ${new Date().toLocaleTimeString()}`);
+                if (archiveElement) {
+                    archiveElement.style.animation = 'none';
+                    archiveElement.style.textShadow = '0 0 35px #ff66aa, 0 0 60px #d81b60';
+                    setTimeout(() => {
+                        archiveElement.style.animation = 'pulseCrimsonGlow 1.8s infinite alternate';
+                    }, 200);
+                }
+                setTimeout(() => {
+                    window.location.href = "Troy.html";
+                }, 150);
+            });
+        }
+
         // Обработчик для кнопки СТАЛКЕР — переход на Stalker.html
-        if (gammaBtn) {
-            gammaBtn.addEventListener('click', (e) => {
+        if (stalkerBtn) {
+            stalkerBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 console.log(`[СТАЛКЕР] Переход на Stalker.html в ${new Date().toLocaleTimeString()}`);
                 if (archiveElement) {
@@ -650,7 +678,7 @@
         
         console.log("%c[SR-A] СИСТЕМА АКТИВНА // STALKER ARCHIVE", "color: #d81b60; font-family: monospace; font-size: 12px");
         console.log("%c[USER: UNKNOWN]  |  SR-A ONLINE // STALKER ARCHIVE", "color: #6fcf97; font-family: monospace;");
-        console.log("%c[ИНСТРУКЦИЯ] Нажмите [Сканировать] → анимация. После завершения появится общая рамка: фото + расширенная кнопка [Сталкер].", "color: #88ffaa");
+        console.log("%c[ИНСТРУКЦИЯ] Нажмите [Сканировать] → анимация. После завершения появятся два окна: [Трой] (слева, картинка по новому URL) и [Сталкер] (справа).", "color: #88ffaa");
     })();
 </script>
 </body>
