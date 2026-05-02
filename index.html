@@ -23,7 +23,6 @@
             overflow-x: hidden;
         }
 
-        /* Эффект зернистости */
         body::before {
             content: "";
             position: fixed;
@@ -36,7 +35,6 @@
             z-index: 1;
         }
 
-        /* Сетка на фоне */
         body::after {
             content: "";
             position: fixed;
@@ -52,7 +50,6 @@
             z-index: 1;
         }
 
-        /* ОСНОВНОЙ КОНТЕЙНЕР – ЭКРАН ТЕРМИНАЛА */
         .terminal {
             position: relative;
             z-index: 10;
@@ -67,7 +64,6 @@
             transition: all 0.3s ease;
         }
 
-        /* Уголки */
         .terminal::before,
         .terminal::after {
             content: "";
@@ -97,7 +93,6 @@
             border-top: none;
         }
 
-        /* GRID основной структуры */
         .protocol-grid {
             display: grid;
             grid-template-columns: 1fr 0.9fr;
@@ -106,12 +101,10 @@
             align-items: center;
         }
 
-        /* ЛЕВАЯ ПАНЕЛЬ: USER INFO */
         .user-panel {
             background: rgba(0, 20, 15, 0.4);
             border-left: 3px solid #0fa;
             padding: 1rem 0 1rem 1.5rem;
-            transition: all 0.2s;
         }
 
         .user-label {
@@ -127,7 +120,6 @@
             font-weight: 500;
             color: #ccffdd;
             text-shadow: 0 0 8px #0fa;
-            word-break: break-word;
         }
 
         .user-name span {
@@ -135,7 +127,6 @@
             font-weight: bold;
         }
 
-        /* ПРАВАЯ ПАНЕЛЬ: STALKER ARCHIVE — малиново-красный цвет */
         .metric-panel {
             background: rgba(0, 20, 15, 0.3);
             padding: 1rem 1.5rem;
@@ -156,8 +147,6 @@
             letter-spacing: 3px;
             text-transform: uppercase;
             animation: pulseCrimsonGlow 1.8s infinite alternate;
-            word-break: break-word;
-            line-height: 1.2;
         }
 
         @keyframes pulseCrimsonGlow {
@@ -171,7 +160,6 @@
             }
         }
 
-        /* СТРОКА ПРОТОКОЛА – динамический блок */
         .protocol-status {
             margin: 2rem 0 1.8rem;
             background: #030b0a70;
@@ -185,14 +173,12 @@
             gap: 12px;
         }
 
-        /* Верхняя строка с кнопкой сканирования */
         .scan-row {
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* КНОПКА СКАНИРОВАНИЯ */
         .scan-button {
             font-size: 1rem;
             font-weight: 600;
@@ -208,7 +194,6 @@
             cursor: pointer;
             transition: all 0.25s ease;
             box-shadow: 0 0 8px rgba(0, 255, 170, 0.4);
-            white-space: nowrap;
         }
 
         .scan-button:hover:not(:disabled) {
@@ -216,23 +201,14 @@
             border-color: #ff66aa;
             color: #ff88cc;
             box-shadow: 0 0 16px #0fa, 0 0 10px #ff66aa;
-            text-shadow: 0 0 5px #0fa;
             transform: scale(1.02);
-        }
-
-        .scan-button:active:not(:disabled) {
-            transform: scale(0.98);
-            background: #0fa22a60;
-            transition: 0.05s;
         }
 
         .scan-button:disabled {
             opacity: 0.6;
             cursor: not-allowed;
-            filter: grayscale(0.1);
         }
 
-        /* Прогресс-бар (анимированная линия) */
         .progress-area {
             width: 100%;
             display: none;
@@ -265,7 +241,6 @@
             transition: width 0.1s linear;
         }
 
-        /* Контейнер для двух окон (флекс-строка) */
         .double-gamma {
             width: 100%;
             display: none;
@@ -275,12 +250,11 @@
             margin-top: 8px;
         }
 
-        /* Единая рамка для каждого блока */
         .unified-frame {
             background: rgba(0, 0, 0, 0.65);
             border: 2px solid #8b0000;
             border-radius: 24px;
-            padding: 20px 20px 20px 20px;
+            padding: 20px;
             box-shadow: 0 0 20px rgba(139, 0, 0, 0.5);
             display: flex;
             flex-direction: column;
@@ -289,23 +263,18 @@
             width: 100%;
             max-width: 280px;
             backdrop-filter: blur(4px);
-            transition: all 0.2s;
         }
 
-        /* Стиль изображения внутри рамки — одинаковый размер */
         .frame-image {
             width: 220px;
             max-width: 100%;
             height: auto;
             border-radius: 16px;
-            display: block;
             border: 1px solid #b00030;
             box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
-            transition: 0.2s;
             object-fit: contain;
         }
 
-        /* Кнопки внутри рамок */
         .frame-button {
             font-size: 1rem;
             font-weight: 700;
@@ -314,7 +283,6 @@
             backdrop-filter: blur(4px);
             padding: 10px 24px;
             min-width: 140px;
-            width: auto;
             border-radius: 60px;
             border: 1px solid #cc3355;
             color: #ffcccc;
@@ -323,7 +291,6 @@
             cursor: pointer;
             transition: all 0.2s ease;
             box-shadow: 0 0 8px rgba(139, 0, 0, 0.7);
-            text-align: center;
         }
 
         .frame-button:hover {
@@ -334,11 +301,6 @@
             transform: scale(1.02);
         }
 
-        .frame-button:active {
-            transform: scale(0.98);
-        }
-
-        /* НИЖНЯЯ СТРОКА */
         .footer-status {
             display: flex;
             justify-content: space-between;
@@ -374,7 +336,6 @@
             padding-left: 10px;
         }
 
-        /* Эффект сканирования */
         .scan-line {
             position: absolute;
             top: 0;
@@ -393,52 +354,15 @@
             100% { transform: translateY(200%); }
         }
 
-        /* Адаптивность */
         @media (max-width: 760px) {
-            .terminal {
-                padding: 1.2rem;
-            }
-            .protocol-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-            .user-name {
-                font-size: 1.6rem;
-            }
-            .sys-badge {
-                font-size: 1.4rem;
-            }
-            .metric-panel {
-                border-right: none;
-                border-left: 3px solid #0fa;
-                text-align: center;
-            }
-            .user-panel {
-                border-left: 3px solid #0fa;
-            }
-            .archive-text {
-                font-size: 1.8rem;
-                letter-spacing: 2px;
-            }
-            .scan-button {
-                font-size: 0.8rem;
-                padding: 6px 18px;
-            }
-            .frame-button {
-                font-size: 0.85rem;
-                padding: 8px 16px;
-                min-width: 120px;
-            }
-            .unified-frame {
-                max-width: 260px;
-                padding: 15px;
-            }
-            .frame-image {
-                width: 200px;
-            }
+            .terminal { padding: 1.2rem; }
+            .protocol-grid { grid-template-columns: 1fr; gap: 1rem; }
+            .user-name { font-size: 1.6rem; }
+            .archive-text { font-size: 1.8rem; }
+            .frame-image { width: 200px; }
+            .unified-frame { max-width: 260px; }
         }
 
-        /* Декоративный уголок */
         .hud-corner {
             position: absolute;
             bottom: 15px;
@@ -446,7 +370,6 @@
             font-size: 0.65rem;
             color: #2f8b6b;
             z-index: 20;
-            font-family: monospace;
             background: rgba(0,0,0,0.4);
             padding: 4px 8px;
             border-radius: 12px;
@@ -457,68 +380,53 @@
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Major+Mono+Display&display=swap" rel="stylesheet">
 </head>
 <body>
-
 <div class="terminal">
     <div class="scan-line"></div>
-
     <div class="protocol-grid">
         <div class="user-panel">
             <div class="user-label">// идентификация</div>
-            <div class="user-name">
-                USER: <span>UNKNOWN</span>
-            </div>
+            <div class="user-name">USER: <span>UNKNOWN</span></div>
         </div>
         <div class="metric-panel">
             <div class="archive-text">STALKER ARCHIVE</div>
         </div>
     </div>
 
-    <!-- Блок протокола: кнопка сканирования + динамические зоны -->
     <div class="protocol-status" id="protocolStatus">
         <div class="scan-row">
             <button class="scan-button" id="scanBtn">[Сканировать]</button>
         </div>
-        <!-- Зона для анимированной линии загрузки -->
         <div class="progress-area" id="progressArea">
             <div class="progress-label">⟳ АНАЛИЗ СИСТЕМЫ ⟳</div>
             <div class="progress-bar-bg">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
         </div>
-        <!-- Контейнер для двух окон (появляется после сканирования) -->
         <div class="double-gamma" id="doubleGamma">
-            <!-- Левое окно: Трой (новая картинка) -->
-            <div class="unified-frame" id="frameTroy">
-                <img class="frame-image" src="https://i.pinimg.com/736x/4b/18/54/4b185430de503eb4ea4f9ed42826385b.jpg" alt="Troy image">
+            <div class="unified-frame">
+                <img class="frame-image" src="https://i.pinimg.com/736x/4b/18/54/4b185430de503eb4ea4f9ed42826385b.jpg" alt="Troy">
                 <button class="frame-button" id="troyBtn">[Трой]</button>
             </div>
-            <!-- Правое окно: Сталкер (новая картинка) -->
-            <div class="unified-frame" id="frameStalker">
-                <img class="frame-image" src="https://i.pinimg.com/736x/f2/9f/16/f29f16c1d9ff46456f327f3a18abdc89.jpg" alt="Stalker image">
+            <div class="unified-frame">
+                <img class="frame-image" src="https://i.pinimg.com/736x/f2/9f/16/f29f16c1d9ff46456f327f3a18abdc89.jpg" alt="Stalker">
                 <button class="frame-button" id="stalkerBtn">[Сталкер]</button>
             </div>
         </div>
     </div>
 
     <div class="footer-status">
-        <div class="sys-badge">
-            ⚙️ SR-A
-        </div>
+        <div class="sys-badge">⚙️ SR-A</div>
         <div class="info-tag">
             <span>PROTOCOL: v.82.0_alpha</span>
             <span>ENCRYPT: ACTIVE</span>
             <span id="uptimeDisplay">UPTIME: 00:00:00</span>
         </div>
     </div>
-
-    <div class="hud-corner">
-        [ SECURE TERMINAL | SYS_ID: SR-A | STALKER ARCHIVE ]
-    </div>
+    <div class="hud-corner">[ SECURE TERMINAL | SYS_ID: SR-A | STALKER ARCHIVE ]</div>
 </div>
 
 <script>
     (function() {
-        // Элементы
         const scanBtn = document.getElementById('scanBtn');
         const progressArea = document.getElementById('progressArea');
         const progressFill = document.getElementById('progressFill');
@@ -531,14 +439,10 @@
         let scanning = false;
         let animationFrame = null;
         let startTime = 0;
-        const animDuration = 2000; // 2 секунды
+        const animDuration = 2000;
 
-        // Функция сброса состояния (прячем оба окна, прогресс)
         function resetScanState(resetButton = true) {
-            if (animationFrame) {
-                cancelAnimationFrame(animationFrame);
-                animationFrame = null;
-            }
+            if (animationFrame) cancelAnimationFrame(animationFrame);
             scanning = false;
             progressArea.style.display = 'none';
             doubleGamma.style.display = 'none';
@@ -549,137 +453,96 @@
             }
         }
 
-        // Функция для плавной анимации прогресса
         function startProgressAnimation() {
             return new Promise((resolve) => {
                 startTime = performance.now();
                 progressFill.style.width = '0%';
-                
                 function update(currentTime) {
                     const elapsed = currentTime - startTime;
                     let percent = Math.min(1, elapsed / animDuration);
-                    const widthPercent = percent * 100;
-                    progressFill.style.width = `${widthPercent}%`;
-                    
-                    if (percent < 1) {
-                        animationFrame = requestAnimationFrame(update);
-                    } else {
-                        animationFrame = null;
-                        resolve();
-                    }
+                    progressFill.style.width = `${percent * 100}%`;
+                    if (percent < 1) animationFrame = requestAnimationFrame(update);
+                    else { animationFrame = null; resolve(); }
                 }
                 animationFrame = requestAnimationFrame(update);
             });
         }
 
-        // Обработчик клика по кнопке Сканировать
         async function onScanClick() {
             if (scanning) return;
-            
             resetScanState(true);
-            
             scanning = true;
             scanBtn.disabled = true;
             scanBtn.textContent = '[СКАНИРОВАНИЕ...]';
-            
             progressArea.style.display = 'flex';
             doubleGamma.style.display = 'none';
-            
             await new Promise(r => setTimeout(r, 30));
             await startProgressAnimation();
-            
             progressArea.style.display = 'none';
             doubleGamma.style.display = 'flex';
-            
             protocolStatus.style.borderColor = '#ff66aa';
-            protocolStatus.style.boxShadow = '0 0 12px rgba(255, 102, 170, 0.3)';
+            protocolStatus.style.boxShadow = '0 0 12px rgba(255,102,170,0.3)';
             setTimeout(() => {
                 protocolStatus.style.borderColor = '';
                 protocolStatus.style.boxShadow = '';
             }, 600);
-            
             if (archiveElement) {
                 archiveElement.style.textShadow = '0 0 25px #f06292, 0 0 45px #d81b60';
-                setTimeout(() => {
-                    archiveElement.style.textShadow = '';
-                }, 400);
+                setTimeout(() => archiveElement.style.textShadow = '', 400);
             }
-            
             scanning = false;
             scanBtn.disabled = false;
             scanBtn.textContent = '[Сканировать]';
-            
-            console.log(`[СКАНИРОВАНИЕ ЗАВЕРШЕНО] ${new Date().toLocaleTimeString()} — Появились два окна: Трой и Сталкер (картинки обновлены)`);
         }
-        
-        // Обработчик для кнопки ТРОЙ — переход на Troy.html
+
         if (troyBtn) {
-            troyBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                console.log(`[ТРОЙ] Переход на Troy.html в ${new Date().toLocaleTimeString()}`);
+            troyBtn.addEventListener('click', () => {
+                console.log(`[ТРОЙ] Переход на Troy.html`);
                 if (archiveElement) {
                     archiveElement.style.animation = 'none';
                     archiveElement.style.textShadow = '0 0 35px #ff66aa, 0 0 60px #d81b60';
-                    setTimeout(() => {
-                        archiveElement.style.animation = 'pulseCrimsonGlow 1.8s infinite alternate';
-                    }, 200);
+                    setTimeout(() => archiveElement.style.animation = 'pulseCrimsonGlow 1.8s infinite alternate', 200);
                 }
-                setTimeout(() => {
-                    window.location.href = "Troy.html";
-                }, 150);
+                setTimeout(() => window.location.href = "Troy.html", 150);
             });
         }
 
-        // Обработчик для кнопки СТАЛКЕР — переход на Stalker.html
         if (stalkerBtn) {
-            stalkerBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                console.log(`[СТАЛКЕР] Переход на Stalker.html в ${new Date().toLocaleTimeString()}`);
+            stalkerBtn.addEventListener('click', () => {
+                console.log(`[СТАЛКЕР] Переход на Stalker.html`);
                 if (archiveElement) {
                     archiveElement.style.animation = 'none';
                     archiveElement.style.textShadow = '0 0 35px #ff66aa, 0 0 60px #d81b60';
-                    setTimeout(() => {
-                        archiveElement.style.animation = 'pulseCrimsonGlow 1.8s infinite alternate';
-                    }, 200);
+                    setTimeout(() => archiveElement.style.animation = 'pulseCrimsonGlow 1.8s infinite alternate', 200);
                 }
-                setTimeout(() => {
-                    window.location.href = "Stalker.html";
-                }, 150);
+                setTimeout(() => window.location.href = "Stalker.html", 150);
             });
         }
-        
-        if (scanBtn) {
-            scanBtn.addEventListener('click', onScanClick);
-        }
-        
-        // Счётчик Uptime
+
+        if (scanBtn) scanBtn.addEventListener('click', onScanClick);
+
         const startTimeUptime = Date.now();
         const uptimeElement = document.getElementById('uptimeDisplay');
-        
         function updateUptime() {
-            if (!uptimeElement) return;
             const elapsed = Math.floor((Date.now() - startTimeUptime) / 1000);
             const hours = Math.floor(elapsed / 3600);
             const minutes = Math.floor((elapsed % 3600) / 60);
             const seconds = elapsed % 60;
-            uptimeElement.textContent = `UPTIME: ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            uptimeElement.textContent = `UPTIME: ${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
         }
         updateUptime();
         setInterval(updateUptime, 1000);
-        
-        // Динамический заголовок
+
         const originalTitle = "SR-A // STALKER ARCHIVE";
         document.title = originalTitle;
         setInterval(() => {
             if (Math.random() > 0.88) {
                 document.title = "> " + originalTitle + " _";
-                setTimeout(() => { document.title = originalTitle; }, 400);
+                setTimeout(() => document.title = originalTitle, 400);
             }
         }, 4000);
-        
-        console.log("%c[SR-A] СИСТЕМА АКТИВНА // STALKER ARCHIVE (новые изображения)", "color: #d81b60; font-family: monospace; font-size: 12px");
-        console.log("%c[USER: UNKNOWN]  |  SR-A ONLINE // STALKER ARCHIVE", "color: #6fcf97; font-family: monospace;");
-        console.log("%c[ИНСТРУКЦИЯ] Нажмите [Сканировать] → анимация → появятся два окна с обновлёнными картинками.", "color: #88ffaa");
+
+        console.log("%c[SR-A] STALKER ARCHIVE ACTIVE", "color:#d81b60");
     })();
 </script>
 </body>
