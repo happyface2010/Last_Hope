@@ -250,6 +250,7 @@
             margin-top: 8px;
         }
 
+        /* Базовая рамка окна (для Сталкера - красная) */
         .unified-frame {
             background: rgba(0, 0, 0, 0.65);
             border: 2px solid #8b0000;
@@ -263,6 +264,14 @@
             width: 100%;
             max-width: 280px;
             backdrop-filter: blur(4px);
+            transition: all 0.2s;
+        }
+
+        /* Левое окно (Трой) — серая рамка окна */
+        .unified-frame.troy-frame {
+            background: rgba(40, 40, 45, 0.85);
+            border-color: rgb(181, 181, 181);
+            box-shadow: 0 0 20px rgba(181, 181, 181, 0.5);
         }
 
         .frame-image {
@@ -270,11 +279,18 @@
             max-width: 100%;
             height: auto;
             border-radius: 16px;
-            border: 1px solid #b00030;
+            border: 2px solid #b00030;   /* стандартная красная рамка вокруг фото */
             box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
             object-fit: contain;
         }
 
+        /* У фото в левом окне (Трой) рамка становится серой */
+        .troy-frame .frame-image {
+            border-color: rgb(181, 181, 181);
+            box-shadow: 0 0 12px rgba(181, 181, 181, 0.6);
+        }
+
+        /* Кнопки внутри рамок — для Сталкера красная */
         .frame-button {
             font-size: 1rem;
             font-weight: 700;
@@ -291,6 +307,21 @@
             cursor: pointer;
             transition: all 0.2s ease;
             box-shadow: 0 0 8px rgba(139, 0, 0, 0.7);
+        }
+
+        /* Кастомный стиль для кнопки Трой — серая гамма */
+        .troy-frame .frame-button {
+            background: rgba(100, 100, 110, 0.9);
+            border-color: rgb(181, 181, 181);
+            color: #eeeeee;
+            box-shadow: 0 0 8px rgba(181, 181, 181, 0.6);
+        }
+
+        .troy-frame .frame-button:hover {
+            background: rgb(181, 181, 181);
+            border-color: #ffffff;
+            color: #222222;
+            box-shadow: 0 0 16px rgb(181, 181, 181);
         }
 
         .frame-button:hover {
@@ -403,11 +434,13 @@
             </div>
         </div>
         <div class="double-gamma" id="doubleGamma">
-            <div class="unified-frame">
+            <!-- Левое окно: Трой с серой расцветкой (рамка окна + рамка фото + кнопка) -->
+            <div class="unified-frame troy-frame" id="frameTroy">
                 <img class="frame-image" src="https://i.pinimg.com/736x/4b/18/54/4b185430de503eb4ea4f9ed42826385b.jpg" alt="Troy">
                 <button class="frame-button" id="troyBtn">[Трой]</button>
             </div>
-            <div class="unified-frame">
+            <!-- Правое окно: Сталкер (красная гамма) -->
+            <div class="unified-frame" id="frameStalker">
                 <img class="frame-image" src="https://i.pinimg.com/736x/f2/9f/16/f29f16c1d9ff46456f327f3a18abdc89.jpg" alt="Stalker">
                 <button class="frame-button" id="stalkerBtn">[Сталкер]</button>
             </div>
@@ -542,7 +575,7 @@
             }
         }, 4000);
 
-        console.log("%c[SR-A] STALKER ARCHIVE ACTIVE", "color:#d81b60");
+        console.log("%c[SR-A] STALKER ARCHIVE ACTIVE (Трой — серая рамка фото)", "color:#b5b5b5");
     })();
 </script>
 </body>
