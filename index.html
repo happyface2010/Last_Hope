@@ -160,6 +160,7 @@
             }
         }
 
+        /* ЗЕЛЁНОЕ ОКОШКО (protocol-status) — база */
         .protocol-status {
             margin: 2rem 0 1.8rem;
             background: #030b0a70;
@@ -167,10 +168,19 @@
             border: 1px dashed #0fa;
             border-radius: 14px;
             backdrop-filter: blur(3px);
-            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.2);
             display: flex;
             flex-direction: column;
             gap: 12px;
+            overflow: hidden;
+        }
+
+        /* Эффект "раскрытия" зелёного окошка при появлении контента */
+        .protocol-status.expand-effect {
+            border: 1px solid #0fa;
+            box-shadow: 0 0 20px rgba(0, 255, 170, 0.5), inset 0 0 8px rgba(0, 255, 170, 0.2);
+            background: #0a1f1a90;
+            transition: all 0.35s ease-out;
         }
 
         .scan-row {
@@ -241,6 +251,7 @@
             transition: width 0.1s linear;
         }
 
+        /* КОНТЕЙНЕР ДВУХ ОКОН — анимированное появление */
         .double-gamma {
             width: 100%;
             display: none;
@@ -248,9 +259,19 @@
             gap: 24px;
             flex-wrap: wrap;
             margin-top: 8px;
+            opacity: 0;
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
 
-        /* Базовая рамка окна (для Сталкера - красная) */
+        .double-gamma.visible {
+            display: flex;
+            opacity: 1;
+            transform: scaleY(1);
+        }
+
+        /* Каждое окно появляется с дополнительной задержкой */
         .unified-frame {
             background: rgba(0, 0, 0, 0.65);
             border: 2px solid #8b0000;
@@ -264,10 +285,13 @@
             width: 100%;
             max-width: 280px;
             backdrop-filter: blur(4px);
-            transition: all 0.2s;
+            transition: all 0.3s ease;
+            animation: fadeInScale 0.5s ease forwards;
+            opacity: 0;
+            transform: scale(0.9);
         }
 
-        /* Левое окно (Трой) — серая рамка окна */
+        /* Левое окно (Трой) — серая рамка и кнопка */
         .unified-frame.troy-frame {
             background: rgba(40, 40, 45, 0.85);
             border-color: rgb(181, 181, 181);
@@ -279,18 +303,16 @@
             max-width: 100%;
             height: auto;
             border-radius: 16px;
-            border: 2px solid #b00030;   /* стандартная красная рамка вокруг фото */
+            border: 2px solid #b00030;
             box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
             object-fit: contain;
         }
 
-        /* У фото в левом окне (Трой) рамка становится серой */
         .troy-frame .frame-image {
             border-color: rgb(181, 181, 181);
             box-shadow: 0 0 12px rgba(181, 181, 181, 0.6);
         }
 
-        /* Кнопки внутри рамок — для Сталкера красная */
         .frame-button {
             font-size: 1rem;
             font-weight: 700;
@@ -309,7 +331,6 @@
             box-shadow: 0 0 8px rgba(139, 0, 0, 0.7);
         }
 
-        /* Кастомный стиль для кнопки Трой — серая гамма */
         .troy-frame .frame-button {
             background: rgba(100, 100, 110, 0.9);
             border-color: rgb(181, 181, 181);
@@ -332,6 +353,27 @@
             transform: scale(1.02);
         }
 
+        /* Анимация появления окон */
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.85);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Задержки для каждого окна — эффект последовательного раскрытия */
+        .double-gamma.visible .unified-frame:first-child {
+            animation-delay: 0.1s;
+        }
+        .double-gamma.visible .unified-frame:last-child {
+            animation-delay: 0.25s;
+        }
+
+        /* Нижняя панель */
         .footer-status {
             display: flex;
             justify-content: space-between;
@@ -434,13 +476,11 @@
             </div>
         </div>
         <div class="double-gamma" id="doubleGamma">
-            <!-- Левое окно: Трой с серой расцветкой (рамка окна + рамка фото + кнопка) -->
-            <div class="unified-frame troy-frame" id="frameTroy">
+            <div class="unified-frame troy-frame">
                 <img class="frame-image" src="https://i.pinimg.com/736x/4b/18/54/4b185430de503eb4ea4f9ed42826385b.jpg" alt="Troy">
                 <button class="frame-button" id="troyBtn">[Трой]</button>
             </div>
-            <!-- Правое окно: Сталкер (красная гамма) -->
-            <div class="unified-frame" id="frameStalker">
+            <div class="unified-frame">
                 <img class="frame-image" src="https://i.pinimg.com/736x/f2/9f/16/f29f16c1d9ff46456f327f3a18abdc89.jpg" alt="Stalker">
                 <button class="frame-button" id="stalkerBtn">[Сталкер]</button>
             </div>
@@ -478,12 +518,17 @@
             if (animationFrame) cancelAnimationFrame(animationFrame);
             scanning = false;
             progressArea.style.display = 'none';
+            // Скрываем контейнер двойных окон, убираем класс видимости
+            doubleGamma.classList.remove('visible');
+            // Сброс стилей, чтобы при следующем сканировании анимация повторилась
             doubleGamma.style.display = 'none';
             progressFill.style.width = '0%';
             if (resetButton) {
                 scanBtn.disabled = false;
                 scanBtn.textContent = '[Сканировать]';
             }
+            // Убираем эффект раскрытия зелёного окошка
+            protocolStatus.classList.remove('expand-effect');
         }
 
         function startProgressAnimation() {
@@ -508,24 +553,43 @@
             scanBtn.disabled = true;
             scanBtn.textContent = '[СКАНИРОВАНИЕ...]';
             progressArea.style.display = 'flex';
+            // Скрываем двойные окна, если были видны
+            doubleGamma.classList.remove('visible');
             doubleGamma.style.display = 'none';
+            
             await new Promise(r => setTimeout(r, 30));
             await startProgressAnimation();
+            
+            // Завершили прогресс — скрываем индикатор
             progressArea.style.display = 'none';
+            
+            // --- АНИМАЦИЯ РАСКРЫТИЯ ЗЕЛЁНОГО ОКОШКА ---
+            protocolStatus.classList.add('expand-effect');
+            
+            // Небольшая задержка перед появлением окон (чтобы подчеркнуть эффект)
+            await new Promise(r => setTimeout(r, 150));
+            
+            // Показываем контейнер с окнами и запускаем анимацию раскрытия
             doubleGamma.style.display = 'flex';
-            protocolStatus.style.borderColor = '#ff66aa';
-            protocolStatus.style.boxShadow = '0 0 12px rgba(255,102,170,0.3)';
+            // Небольшой форсинг рефлоу
+            doubleGamma.offsetHeight;
+            doubleGamma.classList.add('visible');
+            
+            // Дополнительная подсветка зелёного окошка на пару секунд
             setTimeout(() => {
-                protocolStatus.style.borderColor = '';
-                protocolStatus.style.boxShadow = '';
-            }, 600);
+                protocolStatus.classList.remove('expand-effect');
+            }, 800);
+            
             if (archiveElement) {
                 archiveElement.style.textShadow = '0 0 25px #f06292, 0 0 45px #d81b60';
-                setTimeout(() => archiveElement.style.textShadow = '', 400);
+                setTimeout(() => archiveElement.style.textShadow = '', 500);
             }
+            
             scanning = false;
             scanBtn.disabled = false;
             scanBtn.textContent = '[Сканировать]';
+            
+            console.log(`[СКАНИРОВАНИЕ ЗАВЕРШЕНО] Анимированное раскрытие окон`);
         }
 
         if (troyBtn) {
@@ -575,7 +639,7 @@
             }
         }, 4000);
 
-        console.log("%c[SR-A] STALKER ARCHIVE ACTIVE (Трой — серая рамка фото)", "color:#b5b5b5");
+        console.log("%c[SR-A] ГОТОВО. Нажмите [Сканировать] — зелёное окошко раскроется, появятся окна [Трой] и [Сталкер] с анимацией.", "color:#88ffaa");
     })();
 </script>
 </body>
