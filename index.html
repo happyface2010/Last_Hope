@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>SR-A // LAST HOPE</title>
+    <title>SR-A // STALKER ARCHIVE</title>
     <style>
         * {
             margin: 0;
@@ -135,7 +135,7 @@
             font-weight: bold;
         }
 
-        /* ПРАВАЯ ПАНЕЛЬ: LAST HOPE */
+        /* ПРАВАЯ ПАНЕЛЬ: STALKER ARCHIVE — малиново-красный цвет */
         .metric-panel {
             background: rgba(0, 20, 15, 0.3);
             padding: 1rem 1.5rem;
@@ -147,25 +147,26 @@
             min-height: 180px;
         }
 
-        .last-hope-text {
-            font-size: 3.2rem;
+        .archive-text {
+            font-size: 2.7rem;
             font-weight: 700;
             font-family: 'CourierNewPSMT', 'Courier New', 'Courier', monospace;
-            color: #ff3366;
-            text-shadow: 0 0 15px #ff3366, 0 0 30px #ff1144, 0 0 45px #ff3366;
-            letter-spacing: 4px;
+            color: #d81b60;
+            text-shadow: 0 0 15px #b0124a, 0 0 30px #8b0a3a, 0 0 45px #d81b60;
+            letter-spacing: 3px;
             text-transform: uppercase;
-            animation: pulseRedGlow 1.8s infinite alternate;
+            animation: pulseCrimsonGlow 1.8s infinite alternate;
             word-break: break-word;
+            line-height: 1.2;
         }
 
-        @keyframes pulseRedGlow {
+        @keyframes pulseCrimsonGlow {
             0% {
-                text-shadow: 0 0 5px #ff3366, 0 0 10px #ff1144;
+                text-shadow: 0 0 5px #b0124a, 0 0 10px #8b0a3a;
                 opacity: 0.9;
             }
             100% {
-                text-shadow: 0 0 20px #ff6699, 0 0 35px #ff3366, 0 0 50px #ff1144;
+                text-shadow: 0 0 20px #f06292, 0 0 35px #d81b60, 0 0 50px #b0124a;
                 opacity: 1;
             }
         }
@@ -264,11 +265,11 @@
             transition: width 0.1s linear;
         }
 
-        /* Зона для кнопки КОМПЛЕКС — смещена влево, тёмно-красный цвет */
+        /* Зона для кнопки СТАЛКЕР — смещена влево, тёмно-красный цвет */
         .gamma-area {
             width: 100%;
             display: none;
-            justify-content: flex-start;  /* Смещение влево */
+            justify-content: flex-start;
             margin-top: 4px;
         }
 
@@ -276,12 +277,12 @@
             font-size: 0.9rem;
             font-weight: 600;
             font-family: 'Share Tech Mono', 'Fira Code', monospace;
-            background: rgba(80, 0, 0, 0.85);      /* тёмно-красный фон */
+            background: rgba(80, 0, 0, 0.85);
             backdrop-filter: blur(4px);
             padding: 8px 20px;
             border-radius: 40px;
-            border: 1px solid #8b0000;              /* тёмно-красная граница */
-            color: #ffaaaa;                         /* светлый красный текст */
+            border: 1px solid #8b0000;
+            color: #ffaaaa;
             text-transform: uppercase;
             letter-spacing: 2px;
             cursor: pointer;
@@ -379,8 +380,8 @@
             .user-panel {
                 border-left: 3px solid #0fa;
             }
-            .last-hope-text {
-                font-size: 2.2rem;
+            .archive-text {
+                font-size: 1.8rem;
                 letter-spacing: 2px;
             }
             .scan-button {
@@ -424,7 +425,7 @@
             </div>
         </div>
         <div class="metric-panel">
-            <div class="last-hope-text">LAST HOPE</div>
+            <div class="archive-text">STALKER ARCHIVE</div>
         </div>
     </div>
 
@@ -440,9 +441,9 @@
                 <div class="progress-fill" id="progressFill"></div>
             </div>
         </div>
-        <!-- Зона для кнопки "КОМПЛЕКС" (сдвинута влево, тёмно-красная) -->
+        <!-- Зона для кнопки "СТАЛКЕР" (сдвинута влево, тёмно-красная) -->
         <div class="gamma-area" id="gammaArea">
-            <button class="gamma-button" id="gammaBtn">[КОМПЛЕКС]</button>
+            <button class="gamma-button" id="gammaBtn">[Сталкер]</button>
         </div>
     </div>
 
@@ -458,7 +459,7 @@
     </div>
 
     <div class="hud-corner">
-        [ SECURE TERMINAL | SYS_ID: SR-A | LAST HOPE ]
+        [ SECURE TERMINAL | SYS_ID: SR-A | STALKER ARCHIVE ]
     </div>
 </div>
 
@@ -471,7 +472,7 @@
         const gammaArea = document.getElementById('gammaArea');
         const gammaBtn = document.getElementById('gammaBtn');
         const protocolStatus = document.getElementById('protocolStatus');
-        const lastHopeElement = document.querySelector('.last-hope-text');
+        const archiveElement = document.querySelector('.archive-text');
 
         let scanning = false;
         let animationFrame = null;
@@ -543,10 +544,11 @@
                 protocolStatus.style.boxShadow = '';
             }, 600);
             
-            if (lastHopeElement) {
-                lastHopeElement.style.textShadow = '0 0 25px #ff6699, 0 0 45px #ff3366';
+            if (archiveElement) {
+                // Временный эффект — малиновое свечение
+                archiveElement.style.textShadow = '0 0 25px #f06292, 0 0 45px #d81b60';
                 setTimeout(() => {
-                    lastHopeElement.style.textShadow = '';
+                    archiveElement.style.textShadow = '';
                 }, 400);
             }
             
@@ -554,23 +556,23 @@
             scanBtn.disabled = false;
             scanBtn.textContent = '[Сканировать]';
             
-            console.log(`[СКАНИРОВАНИЕ ЗАВЕРШЕНО] ${new Date().toLocaleTimeString()} — КОМПЛЕКС готов`);
+            console.log(`[СКАНИРОВАНИЕ ЗАВЕРШЕНО] ${new Date().toLocaleTimeString()} — Кнопка [Сталкер] готова`);
         }
         
-        // Обработчик для кнопки КОМПЛЕКС — переход на gamma protocol.html
+        // Обработчик для кнопки СТАЛКЕР — переход на Stalker.html
         if (gammaBtn) {
             gammaBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                console.log(`[КОМПЛЕКС] Переход на gamma protocol.html в ${new Date().toLocaleTimeString()}`);
-                if (lastHopeElement) {
-                    lastHopeElement.style.animation = 'none';
-                    lastHopeElement.style.textShadow = '0 0 35px #ff00aa, 0 0 60px #ff3366';
+                console.log(`[СТАЛКЕР] Переход на Stalker.html в ${new Date().toLocaleTimeString()}`);
+                if (archiveElement) {
+                    archiveElement.style.animation = 'none';
+                    archiveElement.style.textShadow = '0 0 35px #ff66aa, 0 0 60px #d81b60';
                     setTimeout(() => {
-                        lastHopeElement.style.animation = 'pulseRedGlow 1.8s infinite alternate';
+                        archiveElement.style.animation = 'pulseCrimsonGlow 1.8s infinite alternate';
                     }, 200);
                 }
                 setTimeout(() => {
-                    window.location.href = "gamma protocol.html";
+                    window.location.href = "Stalker.html";
                 }, 150);
             });
         }
@@ -595,7 +597,7 @@
         setInterval(updateUptime, 1000);
         
         // Динамический заголовок
-        const originalTitle = "SR-A // LAST HOPE";
+        const originalTitle = "SR-A // STALKER ARCHIVE";
         document.title = originalTitle;
         setInterval(() => {
             if (Math.random() > 0.88) {
@@ -604,9 +606,9 @@
             }
         }, 4000);
         
-        console.log("%c[SR-A] СИСТЕМА АКТИВНА // LAST HOPE", "color: #ff3366; font-family: monospace; font-size: 12px");
-        console.log("%c[USER: UNKNOWN]  |  SR-A ONLINE // LAST HOPE", "color: #6fcf97; font-family: monospace;");
-        console.log("%c[ИНСТРУКЦИЯ] Нажмите [Сканировать] → анимация → появление кнопки [КОМПЛЕКС] (слева, тёмно-красная). Она ведёт на gamma protocol.html", "color: #88ffaa");
+        console.log("%c[SR-A] СИСТЕМА АКТИВНА // STALKER ARCHIVE", "color: #d81b60; font-family: monospace; font-size: 12px");
+        console.log("%c[USER: UNKNOWN]  |  SR-A ONLINE // STALKER ARCHIVE", "color: #6fcf97; font-family: monospace;");
+        console.log("%c[ИНСТРУКЦИЯ] Нажмите [Сканировать] → анимация → появление кнопки [Сталкер]. Она ведёт на Stalker.html", "color: #88ffaa");
     })();
 </script>
 </body>
