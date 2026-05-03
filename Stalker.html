@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>СТАЛКЕР - Личное дело: Альфа-9 (Белый текст на тёмном фоне)</title>
+    <title>СТАЛКЕР - Личное дело: Альфа-9</title>
     <style>
         * {
             margin: 0;
@@ -11,7 +11,6 @@
             box-sizing: border-box;
         }
 
-        /* Фон максимально тёмный */
         body {
             min-height: 100vh;
             background: #000000;
@@ -38,7 +37,6 @@
             z-index: 0;
         }
 
-        /* Кнопка НАЗАД — белый текст, тёмная рамка */
         .back-button {
             position: fixed;
             top: 20px;
@@ -68,7 +66,6 @@
             transform: scale(1.02);
         }
 
-        /* ОСНОВНАЯ КАРТОЧКА — очень тёмная */
         .stalker-card {
             max-width: 920px;
             width: 100%;
@@ -273,20 +270,6 @@
             font-family: 'Courier New', monospace;
         }
 
-        .access-level .detail-value {
-            background: #0a0000;
-            padding: 0.15rem 0.8rem;
-            border-radius: 30px;
-            display: inline-block;
-            width: auto;
-            font-weight: 800;
-            font-size: 1.4rem;
-            color: #ffffff;
-            text-shadow: 0 0 2px #300000;
-            border: 1px solid #4a0000;
-            letter-spacing: 2px;
-        }
-
         .group-badge {
             background: #0a0000;
             display: inline-block;
@@ -294,6 +277,59 @@
             border-radius: 3px;
             font-size: 0.9rem;
             border-left: 3px solid #4a0000;
+        }
+
+        .access-wrapper {
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+            width: 100%;
+        }
+
+        .access-window {
+            background: #0a0000;
+            border: 1px solid #4a0000;
+            border-radius: 8px;
+            padding: 0.6rem 1rem;
+            box-shadow: inset 0 0 0 1px rgba(80, 0, 0, 0.2), 0 1px 3px rgba(0,0,0,0.5);
+            width: fit-content;
+            min-width: 240px;
+        }
+
+        .access-title {
+            font-weight: bold;
+            color: #e6a1a1;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+            border-left: 2px solid #4a0000;
+            padding-left: 0.6rem;
+        }
+
+        .access-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            padding: 0.2rem 0;
+        }
+
+        .access-label {
+            font-weight: 600;
+            color: #ddb8b8;
+            letter-spacing: 0.5px;
+        }
+
+        .access-value {
+            font-weight: 800;
+            color: #ffffff;
+            background: #1f0000;
+            padding: 0.1rem 0.6rem;
+            border-radius: 20px;
+            border: 0.5px solid #6a2e2e;
+            font-size: 1rem;
         }
 
         .bio-section {
@@ -332,26 +368,6 @@
             margin-bottom: 0.5rem;
         }
 
-        .mission-list {
-            margin-top: 0.5rem;
-            padding-left: 1.5rem;
-            list-style-type: none;
-        }
-
-        .mission-list li {
-            margin-bottom: 0.25rem;
-            position: relative;
-            color: #ffffff;
-        }
-
-        .mission-list li::before {
-            content: "•";
-            color: #ffffff;
-            font-weight: bold;
-            position: absolute;
-            left: -1rem;
-        }
-
         .warning-footer {
             margin-top: 2rem;
             padding-top: 0.8rem;
@@ -377,7 +393,6 @@
             border: 0.5px solid #2a0000;
         }
 
-        /* Лёгкое мерцание для атмосферы */
         .stalker-card {
             animation: subtleFlicker 0.15s infinite alternate;
         }
@@ -400,7 +415,6 @@
 
         <div class="status-grid">
             <div class="image-block">
-                <!-- НОВАЯ КАРТИНКА: URL заменён на указанный -->
                 <img class="anomaly-image" 
                      src="https://i.pinimg.com/736x/f2/9f/16/f29f16c1d9ff46456f327f3a18abdc89.jpg" 
                      alt="zone anomaly"
@@ -416,7 +430,7 @@
         <div class="details-grid">
             <div class="detail-item">
                 <div class="detail-label">МЕСТО РАБОТЫ:</div>
-                <div class="detail-value">Зона-53.</div>
+                <div class="detail-value">Зона-34.</div>
             </div>
             <div class="detail-item">
                 <div class="detail-label">ГРУППА:</div>
@@ -424,11 +438,22 @@
             </div>
             <div class="detail-item">
                 <div class="detail-label">ДОЛЖНОСТЬ:</div>
-                <div class="detail-value">Лейтенант &nbsp; <span style="font-size:0.8rem; color:#cccccc;">(оперативный сектор)</span></div>
+                <div class="detail-value">Лейтенант</div>
             </div>
-            <div class="detail-item access-level">
-                <div class="detail-label">УРОВЕНЬ ДОСТУПА:</div>
-                <div class="detail-value">5</div>
+        </div>
+
+        <!-- Окошко уровня допуска -->
+        <div class="access-wrapper">
+            <div class="access-window">
+                <div class="access-title">УРОВЕНЬ ДОПУСКА:</div>
+                <div class="access-row">
+                    <span class="access-label">Фактический:</span>
+                    <span class="access-value">4</span>
+                </div>
+                <div class="access-row">
+                    <span class="access-label">Информационный:</span>
+                    <span class="access-value">5</span>
+                </div>
             </div>
         </div>
 
@@ -486,45 +511,15 @@
             </div>
         </div>
 
-        <!-- ЗОНА 34 -->
-        <div class="bio-section">
-            <div class="bio-header">[ЗОНА 34]</div>
-            <div class="bio-text">
-                <p>Выполнял задачи обычного М.О.Г. попутно выслеживая некомпетентных сотрудников и проводил разбирательства в присутствии лиц администрации комплекса и выше.</p>
-                <p>Спустя какое-то время на зону перевели О.В.Б. и после некоторого времени сотрудник подписал с ними выгодный контракт впоследствии повесившись на максимальную должность контрактника.</p>
-                <p>Сталкер участвовал в данных миссиях:</p>
-                <ul class="mission-list">
-                    <li>“Поимка сбежавшего SCP”</li>
-                    <li>“Ликвидация аномальной активности в лагере”</li>
-                    <li>“Замкнутый круг(1)”</li>
-                    <li>“Замкнутый круг(2)”</li>
-                    <li>“Разрушение метеоритов”</li>
-                    <li>“Проверка аномальной активности в шахте”</li>
-                    <li>“Город грехов”</li>
-                    <li>“Удаление”</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- ЗОНА 53 -->
-        <div class="bio-section">
-            <div class="bio-header">[ЗОНА 53]</div>
-            <div class="bio-text">
-                <p>После уничтожения зоны 34 Агент М.О.Г. “Сталкер” был переведён на зону 53 где подписал контракт с Г.О.К. и продолжил свою работу.</p>
-            </div>
-        </div>
-
         <div class="warning-footer">
             <div class="stamp">
                 ☢  ПД-КОНТРОЛЬ  ☢
             </div>
             <div style="display: flex; gap: 6px; align-items: center;">
-                <span>⚠️</span>
-                <span>ЗОНА-53 • допуск подтвержден</span>
-                <span style="font-size: 1.1rem;">⚙️</span>
+                <span>ЗОНА-34 • доступ подтвержден</span>
             </div>
             <div class="stamp">
-                ALFA-9 | M.O.G.
+                ALPHA-9 | M.O.G.
             </div>
         </div>
     </div>
