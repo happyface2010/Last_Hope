@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>СТАЛКЕР - Личное дело: Альфа-9</title>
+    <title>СТАЛКЕР - Личное дело: Альфа-9 (серая зона)</title>
     <style>
         * {
             margin: 0;
@@ -13,8 +13,8 @@
 
         body {
             min-height: 100vh;
-            background: #000000;
-            background: radial-gradient(circle at 20% 30%, #0a0000, #000000);
+            background: #0d0d0d;
+            background: radial-gradient(circle at 20% 30%, #1a1a1a, #050505);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -30,9 +30,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjciIG51bU9jdGF2ZXM9IjMiLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWx0ZXI9InVybCgjZikiIG9wYWNpdHk9IjAuMTUiLz48L3N2Zz4=');
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjciIG51bU9jdGF2ZXM9IjMiLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWx0ZXI9InVybCgjZikiIG9wYWNpdHk9IjAuMDgiLz48L3N2Zz4=');
             background-repeat: repeat;
-            opacity: 0.3;
+            opacity: 0.25;
             pointer-events: none;
             z-index: 0;
         }
@@ -43,38 +43,38 @@
             left: 20px;
             z-index: 100;
             font-family: 'Courier New', monospace;
-            background: #050000cc;
+            background: #181818cc;
             backdrop-filter: blur(4px);
-            border: 1px solid #550000;
+            border: 1px solid #b5b5b5;
             border-radius: 30px;
             padding: 0.5rem 1.2rem;
             font-size: 1rem;
             font-weight: bold;
-            color: #ffffff;
+            color: #e0e0e0;
             text-decoration: none;
             letter-spacing: 1px;
             transition: all 0.2s ease;
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
             cursor: pointer;
         }
 
         .back-button:hover {
-            background: #0a0000cc;
-            border-color: #aa5555;
+            background: #2a2a2acc;
+            border-color: #d0d0d0;
             color: #ffffff;
-            box-shadow: 0 0 10px #550000;
+            box-shadow: 0 0 10px #b5b5b5;
             transform: scale(1.02);
         }
 
         .stalker-card {
             max-width: 920px;
             width: 100%;
-            background: #080000;
-            background: linear-gradient(145deg, #0f0000 0%, #030000 100%);
-            border: 1px solid #3a0000;
-            border-top: 1px solid #4a0000;
-            border-left: 1px solid #400000;
-            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(50, 0, 0, 0.2);
+            background: #111111;
+            background: linear-gradient(145deg, #181818 0%, #0a0a0a 100%);
+            border: 1px solid #6e6e6e;
+            border-top: 1px solid #8a8a8a;
+            border-left: 1px solid #7a7a7a;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(120, 120, 120, 0.15);
             padding: 1.6rem 2rem 2rem 2rem;
             position: relative;
         }
@@ -86,9 +86,9 @@
             left: 12px;
             width: 45px;
             height: 45px;
-            border-top: 2px solid #4a0000;
-            border-left: 2px solid #4a0000;
-            opacity: 0.7;
+            border-top: 2px solid #b5b5b5;
+            border-left: 2px solid #b5b5b5;
+            opacity: 0.8;
             pointer-events: none;
         }
 
@@ -99,9 +99,9 @@
             right: 12px;
             width: 45px;
             height: 45px;
-            border-bottom: 2px solid #4a0000;
-            border-right: 2px solid #4a0000;
-            opacity: 0.7;
+            border-bottom: 2px solid #b5b5b5;
+            border-right: 2px solid #b5b5b5;
+            opacity: 0.8;
             pointer-events: none;
         }
 
@@ -111,7 +111,7 @@
             align-items: baseline;
             flex-wrap: wrap;
             margin-bottom: 1rem;
-            border-bottom: 2px dashed #4a0000;
+            border-bottom: 2px dashed #6e6e6e;
             padding-bottom: 0.75rem;
         }
 
@@ -119,20 +119,20 @@
             font-size: 2.5rem;
             letter-spacing: 4px;
             font-weight: 800;
-            color: #ffffff;
-            text-shadow: 0 0 4px #300000, 1px 1px 0 #1a0000;
+            color: #e0e0e0;
+            text-shadow: 0 0 3px #404040, 1px 1px 0 #1a1a1a;
             font-family: 'Courier New', monospace;
             text-transform: uppercase;
         }
 
         .sub-tag {
             font-size: 0.7rem;
-            background: #0a0000;
+            background: #1e1e1e;
             padding: 0.2rem 0.6rem;
             border-radius: 2px;
-            color: #ffffff;
+            color: #c0c0c0;
             letter-spacing: 1px;
-            border: 0.5px solid #4a0000;
+            border: 0.5px solid #6e6e6e;
             font-weight: bold;
         }
 
@@ -142,11 +142,11 @@
             justify-content: space-between;
             align-items: center;
             gap: 1.5rem;
-            background: #05000070;
-            background: linear-gradient(95deg, #0a0000, #030000);
+            background: #0f0f0f70;
+            background: linear-gradient(95deg, #131313, #080808);
             padding: 1rem 1.2rem;
             margin: 1.2rem 0 1rem 0;
-            border-left: 4px solid #4a0000;
+            border-left: 4px solid #b5b5b5;
             border-radius: 0px 8px 8px 0px;
         }
 
@@ -159,16 +159,16 @@
             height: 160px;
             object-fit: cover;
             border-radius: 12px;
-            border: 3px solid #4a0000;
+            border: 3px solid #b5b5b5;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
-            background-color: #0a0000;
+            background-color: #1a1a1a;
             transition: transform 0.2s ease;
             display: block;
         }
 
         .anomaly-image:hover {
             transform: scale(1.02);
-            box-shadow: 0 0 20px #660000;
+            box-shadow: 0 0 20px #b5b5b5;
         }
 
         .name-block {
@@ -181,14 +181,14 @@
             font-family: 'Courier New', monospace;
             font-size: 2.2rem;
             font-weight: 800;
-            color: #ffffff;
-            text-shadow: 0 0 4px #300000, 1px 1px 0 #1a0000;
+            color: #e0e0e0;
+            text-shadow: 0 0 3px #404040, 1px 1px 0 #1a1a1a;
             letter-spacing: 2px;
-            background: #0a000080;
+            background: #1a1a1a80;
             backdrop-filter: blur(2px);
             padding: 0.4rem 1rem;
             border-radius: 16px;
-            border: 1px solid #4a0000;
+            border: 1px solid #b5b5b5;
             display: inline-block;
             word-break: keep-all;
             white-space: nowrap;
@@ -232,7 +232,7 @@
         hr {
             border: none;
             height: 1px;
-            background: linear-gradient(90deg, #3a0000, #770000, #3a0000);
+            background: linear-gradient(90deg, #5a5a5a, #b5b5b5, #5a5a5a);
             margin: 1.2rem 0 1.4rem 0;
         }
 
@@ -246,24 +246,24 @@
             display: flex;
             flex-wrap: wrap;
             align-items: baseline;
-            border-bottom: 1px dotted #3a0000;
+            border-bottom: 1px dotted #555555;
             padding-bottom: 0.5rem;
         }
 
         .detail-label {
             width: 170px;
             font-weight: 700;
-            color: #ffffff;
+            color: #d0d0d0;
             text-transform: uppercase;
             letter-spacing: 1px;
             font-size: 0.8rem;
-            text-shadow: 0 0 1px #200000;
+            text-shadow: 0 0 1px #222;
         }
 
         .detail-value {
             flex: 1;
             font-weight: 600;
-            color: #ffffff;
+            color: #f0f0f0;
             font-size: 1.05rem;
             letter-spacing: 0.3px;
             word-break: break-word;
@@ -271,12 +271,12 @@
         }
 
         .group-badge {
-            background: #0a0000;
+            background: #1e1e1e;
             display: inline-block;
             padding: 0.15rem 0.9rem;
             border-radius: 3px;
             font-size: 0.9rem;
-            border-left: 3px solid #4a0000;
+            border-left: 3px solid #b5b5b5;
         }
 
         .access-wrapper {
@@ -286,23 +286,23 @@
         }
 
         .access-window {
-            background: #0a0000;
-            border: 1px solid #4a0000;
+            background: #121212;
+            border: 1px solid #6e6e6e;
             border-radius: 8px;
             padding: 0.6rem 1rem;
-            box-shadow: inset 0 0 0 1px rgba(80, 0, 0, 0.2), 0 1px 3px rgba(0,0,0,0.5);
+            box-shadow: inset 0 0 0 1px rgba(100, 100, 100, 0.2), 0 1px 3px rgba(0,0,0,0.5);
             width: fit-content;
             min-width: 240px;
         }
 
         .access-title {
             font-weight: bold;
-            color: #e6a1a1;
+            color: #c0c0c0;
             text-transform: uppercase;
             letter-spacing: 1px;
             font-size: 0.85rem;
             margin-bottom: 0.5rem;
-            border-left: 2px solid #4a0000;
+            border-left: 2px solid #b5b5b5;
             padding-left: 0.6rem;
         }
 
@@ -318,38 +318,38 @@
 
         .access-label {
             font-weight: 600;
-            color: #ddb8b8;
+            color: #b0b0b0;
             letter-spacing: 0.5px;
         }
 
         .access-value {
             font-weight: 800;
             color: #ffffff;
-            background: #1f0000;
+            background: #2a2a2a;
             padding: 0.1rem 0.6rem;
             border-radius: 20px;
-            border: 0.5px solid #6a2e2e;
+            border: 0.5px solid #8a8a8a;
             font-size: 1rem;
         }
 
         .bio-section {
             margin-top: 1.8rem;
             margin-bottom: 1rem;
-            background: #06000080;
-            background: linear-gradient(135deg, #0a0000, #020000);
-            border-left: 3px solid #4a0000;
+            background: #0e0e0e80;
+            background: linear-gradient(135deg, #141414, #080808);
+            border-left: 3px solid #b5b5b5;
             padding: 1rem 1.3rem;
             border-radius: 8px;
-            box-shadow: inset 0 0 0 1px rgba(30, 0, 0, 0.3), 0 2px 6px rgba(0,0,0,0.5);
+            box-shadow: inset 0 0 0 1px rgba(60, 60, 60, 0.3), 0 2px 6px rgba(0,0,0,0.5);
         }
 
         .bio-header {
             font-size: 1.3rem;
             font-weight: bold;
-            color: #ffffff;
+            color: #e0e0e0;
             letter-spacing: 2px;
-            text-shadow: 0 0 1px #300000;
-            border-bottom: 1px dashed #4a0000;
+            text-shadow: 0 0 1px #3a3a3a;
+            border-bottom: 1px dashed #6e6e6e;
             display: inline-block;
             margin-bottom: 0.8rem;
             font-family: 'Courier New', monospace;
@@ -359,7 +359,7 @@
             font-family: 'Courier New', monospace;
             font-size: 0.85rem;
             line-height: 1.45;
-            color: #ffffff;
+            color: #dddddd;
             text-align: justify;
             letter-spacing: 0.2px;
         }
@@ -373,8 +373,8 @@
             padding-top: 0.8rem;
             text-align: center;
             font-size: 0.7rem;
-            color: #ffffff;
-            border-top: 1px dashed #4a0000;
+            color: #cccccc;
+            border-top: 1px dashed #6e6e6e;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -384,29 +384,23 @@
 
         .stamp {
             font-family: monospace;
-            background: #050000;
+            background: #181818;
             padding: 0.2rem 0.8rem;
             font-size: 0.65rem;
-            color: #ffffff;
+            color: #c0c0c0;
             letter-spacing: 1px;
             border-radius: 2px;
-            border: 0.5px solid #2a0000;
+            border: 0.5px solid #6e6e6e;
         }
 
         .stalker-card {
-            animation: subtleFlicker 0.15s infinite alternate;
-        }
-
-        @keyframes subtleFlicker {
-            0% { opacity: 0.99; }
-            100% { opacity: 1; }
+            animation: none;
         }
     </style>
 </head>
 <body>
 
-    <!-- Ссылка изменена на index.html -->
-    <a href="index.html" class="back-button">[НАЗАД]</a>
+    <a href="index.html" class="back-button" aria-label="Вернуться на главную">[НАЗАД]</a>
 
     <div class="stalker-card">
         <div class="header">
@@ -416,10 +410,11 @@
 
         <div class="status-grid">
             <div class="image-block">
+                <!-- НОВОЕ ИЗОБРАЖЕНИЕ ПО URL -->
                 <img class="anomaly-image" 
-                     src="https://i.pinimg.com/736x/f2/9f/16/f29f16c1d9ff46456f327f3a18abdc89.jpg" 
+                     src="https://i.pinimg.com/736x/4b/18/54/4b185430de503eb4ea4f9ed42826385b.jpg" 
                      alt="zone anomaly"
-                     onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20160%20160%22%3E%3Crect%20width%3D%22160%22%20height%3D%22160%22%20fill%3D%22%230a0000%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20text-anchor%3D%22middle%22%20dy%3D%22.3em%22%20fill%3D%22%23ffffff%22%20font-size%3D%2224%22%3E!%3C%2Ftext%3E%3C%2Fsvg%3E';">
+                     onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20160%20160%22%3E%3Crect%20width%3D%22160%22%20height%3D%22160%22%20fill%3D%22222%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20text-anchor%3D%22middle%22%20dy%3D%22.3em%22%20fill%3D%22%23b5b5b5%22%20font-size%3D%2224%22%3E!%3C%2Ftext%3E%3C%2Fsvg%3E';">
             </div>
             <div class="name-block">
                 <div class="happy-name">Happy Facen</div>
@@ -443,7 +438,6 @@
             </div>
         </div>
 
-        <!-- Окошко уровня допуска -->
         <div class="access-wrapper">
             <div class="access-window">
                 <div class="access-title">УРОВЕНЬ ДОПУСКА:</div>
@@ -458,7 +452,6 @@
             </div>
         </div>
 
-        <!-- ДЕТСТВО -->
         <div class="bio-section">
             <div class="bio-header">[ДЕТСТВО]</div>
             <div class="bio-text">
@@ -467,7 +460,6 @@
             </div>
         </div>
 
-        <!-- СТУДЕНЧЕСКИЕ ГОДЫ -->
         <div class="bio-section">
             <div class="bio-header">[СТУДЕНЧЕСКИЕ ГОДЫ]</div>
             <div class="bio-text">
@@ -477,7 +469,6 @@
             </div>
         </div>
 
-        <!-- ВОЕННАЯ КАРЬЕРА -->
         <div class="bio-section">
             <div class="bio-header">[ВОЕННАЯ КАРЬЕРА]</div>
             <div class="bio-text">
@@ -486,7 +477,6 @@
             </div>
         </div>
 
-        <!-- ФОНД S.C.P. -->
         <div class="bio-section">
             <div class="bio-header">[ФОНД S.C.P.]</div>
             <div class="bio-text">
@@ -496,7 +486,6 @@
             </div>
         </div>
 
-        <!-- М.О.Г. -->
         <div class="bio-section">
             <div class="bio-header">[М.О.Г.]</div>
             <div class="bio-text">
@@ -504,7 +493,6 @@
             </div>
         </div>
 
-        <!-- РАСПРЕДЕЛЕНИЕ В ЗОНУ 34 -->
         <div class="bio-section">
             <div class="bio-header">[РАСПРЕДЕЛЕНИЕ В ЗОНУ 34]</div>
             <div class="bio-text">
