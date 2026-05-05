@@ -62,7 +62,7 @@
             box-shadow: 0 0 30px rgba(0, 255, 170, 0.15), inset 0 0 15px rgba(0, 255, 170, 0.05);
             padding: 1.8rem 2rem 2rem 2rem;
             transition: all 0.3s ease;
-            overflow-x: hidden;   /* дополнительная защита */
+            overflow-x: hidden;
         }
 
         .terminal::before,
@@ -172,7 +172,7 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
-            overflow: hidden;
+            overflow-x: hidden;
         }
 
         .protocol-status.expand-effect {
@@ -261,6 +261,7 @@
             transform: scaleY(0);
             transform-origin: top;
             transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            overflow-x: hidden;
         }
 
         .double-gamma.visible {
@@ -356,13 +357,13 @@
             transform: scale(1.02);
         }
 
-        /* Блок, который содержит линию и кнопку — с шириной 80% и центрированием */
         .report-section {
             width: 80%;
+            max-width: 100%;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
-            align-items: flex-start; /* кнопка будет слева, но не вылезет за левый край */
+            align-items: flex-start;
             gap: 8px;
         }
 
@@ -458,24 +459,7 @@
             padding-left: 10px;
         }
 
-        .scan-line {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, transparent 0%, rgba(0, 255, 170, 0.05) 50%, transparent 100%);
-            pointer-events: none;
-            animation: scan 6s linear infinite;
-            z-index: 2;
-            border-radius: 28px;
-        }
-
-        @keyframes scan {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(200%); }
-        }
-
+        /* Адаптивность */
         @media (max-width: 760px) {
             .terminal { padding: 1.2rem; }
             .protocol-grid { grid-template-columns: 1fr; gap: 1rem; }
@@ -508,7 +492,6 @@
 </head>
 <body>
 <div class="terminal">
-    <div class="scan-line"></div>
     <div class="protocol-grid">
         <div class="user-panel">
             <div class="user-label">// идентификация</div>
@@ -540,7 +523,6 @@
                     <button class="frame-button" id="stalkerBtn">[Сталкер]</button>
                 </div>
             </div>
-            <!-- Блок, содержащий линию и кнопку — ширина 80%, центрирован, кнопка не вылезает левее линии -->
             <div class="report-section">
                 <div class="report-divider"></div>
                 <button class="report-button" id="reportBtn">[Отчёт #95]</button>
@@ -639,7 +621,7 @@
             scanning = false;
             scanBtn.disabled = false;
             scanBtn.textContent = '[Сканировать]';
-            console.log(`[СКАНИРОВАНИЕ ЗАВЕРШЕНО] Кнопка отчёта выровнена по левому краю линии`);
+            console.log(`[СКАНИРОВАНИЕ ЗАВЕРШЕНО] Эффект сканирующей линии удалён.`);
         }
 
         if (troyBtn) {
@@ -701,7 +683,7 @@
             }
         }, 4000);
 
-        console.log("%c[SR-A] ГОТОВО. Кнопка [Отчёт #95] теперь левее не вылезает за линию, горизонтальный скролл убран.", "color:#88ffaa");
+        console.log("%c[SR-A] Эффект бегущей линии полностью убран. Интерфейс статичен.", "color:#88ffaa");
     })();
 </script>
 </body>
