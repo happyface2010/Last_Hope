@@ -20,7 +20,7 @@
             font-family: 'Share Tech Mono', 'Fira Code', 'Courier New', monospace;
             padding: 1.5rem;
             position: relative;
-            overflow-x: hidden;
+            overflow-x: hidden;   /* убираем горизонтальную прокрутку */
         }
 
         body::before {
@@ -62,6 +62,7 @@
             box-shadow: 0 0 30px rgba(0, 255, 170, 0.15), inset 0 0 15px rgba(0, 255, 170, 0.05);
             padding: 1.8rem 2rem 2rem 2rem;
             transition: all 0.3s ease;
+            overflow-x: hidden;   /* дополнительная защита */
         }
 
         .terminal::before,
@@ -160,7 +161,6 @@
             }
         }
 
-        /* ЗЕЛЁНОЕ ОКОШКО (protocol-status) — база */
         .protocol-status {
             margin: 2rem 0 1.8rem;
             background: #030b0a70;
@@ -175,7 +175,6 @@
             overflow: hidden;
         }
 
-        /* Эффект "раскрытия" зелёного окошка при появлении контента */
         .protocol-status.expand-effect {
             border: 1px solid #0fa;
             box-shadow: 0 0 20px rgba(0, 255, 170, 0.5), inset 0 0 8px rgba(0, 255, 170, 0.2);
@@ -251,7 +250,6 @@
             transition: width 0.1s linear;
         }
 
-        /* КОНТЕЙНЕР ДВУХ ОКОН + ЛИНИЯ + КНОПКА ОТЧЁТА — анимированное появление */
         .double-gamma {
             width: 100%;
             display: none;
@@ -271,7 +269,6 @@
             transform: scaleY(1);
         }
 
-        /* Контейнер для двух окон (флекс) */
         .windows-container {
             display: flex;
             justify-content: center;
@@ -280,7 +277,6 @@
             width: 100%;
         }
 
-        /* Отдельное окно */
         .unified-frame {
             background: rgba(0, 0, 0, 0.65);
             border: 2px solid #8b0000;
@@ -294,13 +290,11 @@
             width: 100%;
             max-width: 280px;
             backdrop-filter: blur(4px);
-            transition: all 0.3s ease;
             animation: fadeInScale 0.5s ease forwards;
             opacity: 0;
             transform: scale(0.9);
         }
 
-        /* Левое окно (Трой) — серая рамка */
         .unified-frame.troy-frame {
             background: rgba(40, 40, 45, 0.85);
             border-color: rgb(181, 181, 181);
@@ -362,16 +356,24 @@
             transform: scale(1.02);
         }
 
-        /* ЛИНИЯ-РАЗДЕЛИТЕЛЬ */
-        .report-divider {
+        /* Блок, который содержит линию и кнопку — с шириной 80% и центрированием */
+        .report-section {
             width: 80%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* кнопка будет слева, но не вылезет за левый край */
+            gap: 8px;
+        }
+
+        .report-divider {
+            width: 100%;
             height: 1px;
             background: linear-gradient(90deg, transparent, #0fa, #0fa, transparent);
-            margin: 8px 0 4px 0;
+            margin: 0;
             box-shadow: 0 0 4px #0fa;
         }
 
-        /* Кнопка [Отчёт #95] */
         .report-button {
             font-size: 0.9rem;
             font-weight: 600;
@@ -387,8 +389,7 @@
             cursor: pointer;
             transition: all 0.2s ease;
             box-shadow: 0 0 6px rgba(0, 255, 170, 0.4);
-            margin-top: 4px;
-            animation: fadeInScale 0.5s ease 0.35s forwards;
+            animation: fadeInScale 0.5s ease 0.45s forwards;
             opacity: 0;
             transform: scale(0.9);
         }
@@ -401,7 +402,6 @@
             transform: scale(1.02);
         }
 
-        /* Анимация появления элементов */
         @keyframes fadeInScale {
             0% {
                 opacity: 0;
@@ -413,19 +413,16 @@
             }
         }
 
-        /* Задержки для окон */
         .double-gamma.visible .unified-frame:first-child {
             animation-delay: 0.1s;
         }
         .double-gamma.visible .unified-frame:last-child {
             animation-delay: 0.25s;
         }
-        /* Кнопка отчёта появляется после линии */
         .double-gamma.visible .report-button {
             animation-delay: 0.45s;
         }
 
-        /* Нижняя панель */
         .footer-status {
             display: flex;
             justify-content: space-between;
@@ -486,7 +483,11 @@
             .archive-text { font-size: 1.8rem; }
             .frame-image { width: 200px; }
             .unified-frame { max-width: 260px; }
-            .report-divider { width: 90%; }
+            .report-section { width: 90%; }
+            .report-button {
+                padding: 6px 18px;
+                font-size: 0.8rem;
+            }
         }
 
         .hud-corner {
@@ -529,7 +530,6 @@
             </div>
         </div>
         <div class="double-gamma" id="doubleGamma">
-            <!-- Контейнер для двух окон -->
             <div class="windows-container">
                 <div class="unified-frame troy-frame">
                     <img class="frame-image" src="https://i.pinimg.com/736x/4b/18/54/4b185430de503eb4ea4f9ed42826385b.jpg" alt="Troy">
@@ -540,10 +540,11 @@
                     <button class="frame-button" id="stalkerBtn">[Сталкер]</button>
                 </div>
             </div>
-            <!-- Линия-разделитель -->
-            <div class="report-divider"></div>
-            <!-- Кнопка отчёта -->
-            <button class="report-button" id="reportBtn">[Отчёт #95]</button>
+            <!-- Блок, содержащий линию и кнопку — ширина 80%, центрирован, кнопка не вылезает левее линии -->
+            <div class="report-section">
+                <div class="report-divider"></div>
+                <button class="report-button" id="reportBtn">[Отчёт #95]</button>
+            </div>
         </div>
     </div>
 
@@ -619,12 +620,11 @@
             
             progressArea.style.display = 'none';
             
-            // Анимация раскрытия зелёного окошка
             protocolStatus.classList.add('expand-effect');
             await new Promise(r => setTimeout(r, 150));
             
             doubleGamma.style.display = 'flex';
-            doubleGamma.offsetHeight; // рефлоу
+            doubleGamma.offsetHeight;
             doubleGamma.classList.add('visible');
             
             setTimeout(() => {
@@ -639,7 +639,7 @@
             scanning = false;
             scanBtn.disabled = false;
             scanBtn.textContent = '[Сканировать]';
-            console.log(`[СКАНИРОВАНИЕ ЗАВЕРШЕНО] Появились окна, линия и кнопка [Отчёт #95]`);
+            console.log(`[СКАНИРОВАНИЕ ЗАВЕРШЕНО] Кнопка отчёта выровнена по левому краю линии`);
         }
 
         if (troyBtn) {
@@ -701,7 +701,7 @@
             }
         }, 4000);
 
-        console.log("%c[SR-A] ГОТОВО. Нажмите [Сканировать] — появятся окна, линия и кнопка [Отчёт #95] с анимацией.", "color:#88ffaa");
+        console.log("%c[SR-A] ГОТОВО. Кнопка [Отчёт #95] теперь левее не вылезает за линию, горизонтальный скролл убран.", "color:#88ffaa");
     })();
 </script>
 </body>
